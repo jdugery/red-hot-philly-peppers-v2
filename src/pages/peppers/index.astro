@@ -3,16 +3,19 @@ import MainLayout from "../../layouts/MainLayout.astro";
 const featuredPeppers = [
   {
     name: "Sugar Rush Stripey",
+    slug: "sugar-rush-stripey",
     heat: "25,000–50,000 SHU",
     description: "Sweet, tropical flavor with striking striped fruit.",
   },
   {
     name: "7 Pot Primo",
+    slug: "7-pot-primo",
     heat: "1,000,000+ SHU",
     description: "An extremely hot pepper with a distinctive pointed tail.",
   },
   {
     name: "Rezha Macedonian",
+    slug: "rezha-macedonian",
     heat: "Mild–Medium",
     description: "A rare heirloom pepper known for its deeply textured skin.",
   },
@@ -77,8 +80,7 @@ const featuredPeppers = [
               <p class="heat">{pepper.heat}</p>
               <h3>{pepper.name}</h3>
               <p>{pepper.description}</p>
-              <a href="/peppers">View variety →</a>
-            </div>
+<a href={`/peppers/${pepper.slug}`}>View variety →</a>            </div>
           </article>
         ))
       }
