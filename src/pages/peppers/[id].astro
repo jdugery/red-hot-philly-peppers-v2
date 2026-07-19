@@ -16,100 +16,213 @@ const { Content } = await render(pepper);
 ---
 
 <MainLayout title={`${pepper.data.name} | Red Hot Philly Peppers`}>
-  <section class="pepper-detail">
+  <main class="pepper-page">
     <a class="back-link" href="/peppers">← All pepper varieties</a>
 
-    <p class="eyebrow">{pepper.data.heat}</p>
-    <h1>{pepper.data.name}</h1>
+    <section class="pepper-hero">
+      <div class="image-column">
+        {
+          pepper.data.image ? (
+            <div class="detail-image">
+              <img
+                src={pepper.data.image}
+                alt={`${pepper.data.name} pepper`}
+              />
+            </div>
+          ) : (
+            <div class="detail-image image-placeholder">
+              <span>Photo coming soon</span>
+            </div>
+          )
+        }
+      </div>
 
-    <p class="species">{pepper.data.species}</p>
+      <div class="details-column">
+        <h1>{pepper.data.name}</h1>
 
-    {
-      pepper.data.image && (
-        <div class="detail-image">
-          <img
-            src={pepper.data.image}
-            alt={`${pepper.data.name} pepper`}
-          />
-        </div>
-      )
-    }
-
-    <p class="description">
-      {pepper.data.description}
-    </p>
-
-    {
-      pepper.data.color && (
-        <p>
-          <strong>Color:</strong> {pepper.data.color}
+        <p class="description">
+          {pepper.data.description}
         </p>
-      )
-    }
 
-    <p>
-      <strong>Availability:</strong>
-      {pepper.data.available ? " Available" : " Not currently available"}
-    </p>
+        <div class="facts">
+          <div class="fact-row">
+            <span>Species</span>
+            <strong>{pepper.data.species}</strong>
+          </div>
 
-    <div class="body-content">
+          <div class="fact-row">
+            <span>Heat</span>
+            <strong>{pepper.data.heat}</strong>
+          </div>
+
+          {
+            pepper.data.color && (
+              <div class="fact-row">
+                <span>Color</span>
+                <strong>{pepper.data.color}</strong>
+              </div>
+            )
+          }
+
+          <div class="fact-row">
+            <span>Availability</span>
+            <strong>
+              {pepper.data.available
+                ? "Available"
+                : "Not currently available"}
+            </strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="body-content">
       <Content />
-    </div>
-  </section>
+    </section>
+  </main>
 </MainLayout>
 
 <style>
-  .pepper-detail {
-    width: min(850px, calc(100% - 40px));
-    min-height: 600px;
+  .pepper-page {
+    width: min(1180px, calc(100% - 40px));
     margin: auto;
-    padding: 80px 0 120px;
+    padding: 55px 0 110px;
   }
 
   .back-link {
     display: inline-block;
-    margin-bottom: 55px;
+    margin-bottom: 38px;
     color: var(--red);
     font-weight: 750;
+    text-decoration: none;
   }
 
-  .pepper-detail h1 {
-    margin-bottom: 18px;
-  }
-
-  .species {
-    color: var(--muted);
-    font-style: italic;
+  .pepper-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.95fr);
+    gap: 64px;
+    align-items: start;
   }
 
   .detail-image {
     width: 100%;
-    margin: 35px 0;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 4 / 5;
     overflow: hidden;
-    border-radius: 12px;
-    background: #f5f2ea;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: #eee9df;
   }
 
   .detail-image img {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    object-position: center center;
+    object-position: center;
     display: block;
   }
 
+  .image-placeholder {
+    display: grid;
+    place-items: center;
+    color: var(--muted);
+  }
+
+  .details-column {
+    position: sticky;
+    top: 35px;
+    padding-top: 8px;
+  }
+
+  .details-column h1 {
+    max-width: 720px;
+    margin: 0;
+    font-size: clamp(52px, 7vw, 92px);
+    line-height: 0.95;
+    letter-spacing: -0.055em;
+  }
+
   .description {
-    max-width: 700px;
-    margin: 30px 0;
-    font-size: 20px;
-    line-height: 1.7;
+    max-width: 620px;
+    margin: 30px 0 34px;
+    font-size: 21px;
+    line-height: 1.65;
+  }
+
+  .facts {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.45);
+  }
+
+  .fact-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 28px;
+    padding: 18px 20px;
+  }
+
+  .fact-row + .fact-row {
+    border-top: 1px solid var(--border);
+  }
+
+  .fact-row span {
+    color: var(--muted);
+  }
+
+  .fact-row strong {
+    text-align: right;
   }
 
   .body-content {
-    margin-top: 45px;
-    padding-top: 30px;
+    max-width: 760px;
+    margin-top: 72px;
+    padding-top: 38px;
     border-top: 1px solid var(--border);
+    font-size: 18px;
     line-height: 1.8;
+  }
+
+  .body-content:empty {
+    display: none;
+  }
+
+  @media (max-width: 850px) {
+    .pepper-page {
+      padding-top: 35px;
+    }
+
+    .pepper-hero {
+      grid-template-columns: 1fr;
+      gap: 34px;
+    }
+
+    .details-column {
+      position: static;
+      padding-top: 0;
+    }
+
+    .details-column h1 {
+      font-size: clamp(48px, 13vw, 76px);
+    }
+
+    .detail-image {
+      aspect-ratio: 4 / 4.5;
+    }
+
+    .body-content {
+      margin-top: 55px;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .fact-row {
+      align-items: flex-start;
+    }
+
+    .fact-row strong {
+      max-width: 62%;
+    }
   }
 </style>

@@ -1,39 +1,47 @@
 ---
 const { title = "Red Hot Philly Peppers" } = Astro.props;
 ---
+
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-<link rel="icon" href="/favicon.ico" sizes="any" />
-<link rel="apple-touch-icon" href="/apple-touch-icon.png" />   
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
     <meta
       name="description"
       content="Red Hot Philly Peppers grows specialty, heirloom, and superhot pepper varieties in the Philadelphia area."
     />
+
     <title>{title}</title>
   </head>
 
   <body>
     <header class="site-header">
-      <a class="logo" href="/">
-        <span class="logo-mark">RH</span>
-        <span>
-          <strong>Red Hot</strong>
-          <small>Philly Peppers</small>
-        </span>
-      </a>
+     <a class="logo" href="/">
+  <img
+    class="logo-mark"
+    src="/apple-touch-icon.png"
+    alt="Red Hot Philly Peppers logo"
+  />
+
+  <span class="logo-text">
+    <strong>Red Hot Philly Peppers</strong>
+  </span>
+</a>
 
       <nav>
-        <a href="#varieties">Varieties</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
+        <a href="/#varieties">Varieties</a>
+        <a href="/#about">About</a>
+        <a href="/#contact">Contact</a>
       </nav>
     </header>
 
     <main>
-     <slot />
+      <slot />
     </main>
 
     <footer>
@@ -45,14 +53,23 @@ const { title = "Red Hot Philly Peppers" } = Astro.props;
 
 <style is:global>
   :root {
-    --black: #111311;
-    --cream: #f6f3eb;
-    --white: #ffffff;
-    --red: #d53024;
-    --red-dark: #a91f17;
-    --green: #264c35;
-    --muted: #686d68;
-    --border: #dedfd9;
+    --black: #241917;
+    --cream: #f4e9e2;
+    --white: #fffaf7;
+
+    --red: #b52b2b;
+    --red-dark: #861d1d;
+    --red-light: #d34a3e;
+    --red-soft: #f0d4ce;
+    --red-pale: #faebe7;
+
+    --green: #304638;
+
+    --muted: #75645e;
+    --border: #dec9c0;
+
+    --shadow:
+      0 18px 50px rgba(84, 27, 23, 0.1);
   }
 
   * {
@@ -65,7 +82,18 @@ const { title = "Red Hot Philly Peppers" } = Astro.props;
 
   body {
     margin: 0;
-    background: var(--cream);
+    background:
+      radial-gradient(
+        circle at 90% 4%,
+        rgba(181, 43, 43, 0.13),
+        transparent 28%
+      ),
+      radial-gradient(
+        circle at 5% 32%,
+        rgba(211, 74, 62, 0.07),
+        transparent 24%
+      ),
+      linear-gradient(180deg, #f9f0eb 0%, #f1e2da 100%);
     color: var(--black);
     font-family:
       Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
@@ -77,65 +105,98 @@ const { title = "Red Hot Philly Peppers" } = Astro.props;
     text-decoration: none;
   }
 
+  main {
+    min-height: 70vh;
+  }
+
   .site-header {
+    position: relative;
+    z-index: 10;
     width: min(1200px, calc(100% - 40px));
-    min-height: 90px;
-    margin: auto;
+    min-height: 84px;
+    margin: 20px auto 0;
+    padding: 0 25px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border: 1px solid rgba(181, 43, 43, 0.14);
+    border-radius: 18px;
+    background: rgba(255, 250, 247, 0.82);
+    box-shadow: 0 10px 35px rgba(84, 27, 23, 0.07);
+    backdrop-filter: blur(14px);
   }
 
   .logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
 
-  .logo-mark {
-    width: 44px;
-    height: 44px;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    background: var(--red);
-    color: white;
-    font-size: 14px;
-    font-weight: 800;
-  }
+.logo-mark {
+  width: 62px;
+  height: 62px;
+  display: block;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(181, 43, 43, 0.18);
+  object-fit: cover;
+  box-shadow: 0 8px 22px rgba(134, 29, 29, 0.18);
+}
 
-  .logo strong,
-  .logo small {
-    display: block;
-  }
+.logo-text {
+  display: flex;
+  align-items: center;
+}
 
-  .logo strong {
-    font-size: 16px;
-  }
-
-  .logo small {
-    color: var(--muted);
-    font-size: 13px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
+.logo-text strong {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+  color: var(--black);
+}
 
   nav {
     display: flex;
-    gap: 28px;
+    gap: 30px;
     font-size: 14px;
-    font-weight: 650;
+    font-weight: 750;
+  }
+
+  nav a {
+    position: relative;
+    padding: 10px 0;
+  }
+
+  nav a::after {
+    position: absolute;
+    right: 0;
+    bottom: 3px;
+    left: 0;
+    height: 2px;
+    background: var(--red);
+    content: "";
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.2s ease;
   }
 
   nav a:hover {
     color: var(--red);
   }
 
+  nav a:hover::after {
+    transform: scaleX(1);
+  }
+
   .hero {
     width: min(1200px, calc(100% - 40px));
     min-height: 650px;
     margin: auto;
-    padding: 70px 0 90px;
+    padding: 75px 0 100px;
     display: grid;
     grid-template-columns: 1.05fr 0.95fr;
     align-items: center;
@@ -146,8 +207,8 @@ const { title = "Red Hot Philly Peppers" } = Astro.props;
     margin: 0 0 18px;
     color: var(--red);
     font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.16em;
+    font-weight: 850;
+    letter-spacing: 0.17em;
     text-transform: uppercase;
   }
 
@@ -159,42 +220,62 @@ const { title = "Red Hot Philly Peppers" } = Astro.props;
     letter-spacing: -0.06em;
   }
 
+  h2,
+  h3 {
+    color: var(--black);
+  }
+
   .hero-description {
     max-width: 590px;
-    margin: 28px 0 0;
+    margin: 29px 0 0;
     color: var(--muted);
     font-size: 19px;
-    line-height: 1.65;
+    line-height: 1.68;
   }
 
   .hero-actions {
-    margin-top: 36px;
+    margin-top: 38px;
     display: flex;
-    gap: 12px;
+    gap: 13px;
   }
 
   .button {
-    display: inline-flex;
     min-height: 52px;
-    padding: 0 24px;
+    padding: 0 25px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 4px;
+    border-radius: 9px;
     font-size: 14px;
-    font-weight: 750;
+    font-weight: 800;
+    transition:
+      transform 0.2s ease,
+      background 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .button:hover {
+    transform: translateY(-2px);
   }
 
   .primary {
-    background: var(--red);
+    background: linear-gradient(135deg, var(--red-light), var(--red-dark));
     color: white;
+    box-shadow: 0 12px 28px rgba(181, 43, 43, 0.25);
   }
 
   .primary:hover {
-    background: var(--red-dark);
+    box-shadow: 0 16px 34px rgba(181, 43, 43, 0.34);
   }
 
   .secondary {
-    border: 1px solid var(--black);
+    border: 1px solid rgba(134, 29, 29, 0.34);
+    background: rgba(255, 250, 247, 0.55);
+    color: var(--red-dark);
+  }
+
+  .secondary:hover {
+    background: var(--red-pale);
   }
 
   .hero-visual {
@@ -204,32 +285,44 @@ const { title = "Red Hot Philly Peppers" } = Astro.props;
   .image-placeholder {
     height: 100%;
     min-height: 520px;
-    padding: 40px;
+    padding: 42px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 22px;
     background:
-      linear-gradient(145deg, rgba(38, 76, 53, 0.2), rgba(213, 48, 36, 0.35)),
-      var(--green);
+      linear-gradient(
+        145deg,
+        rgba(79, 16, 16, 0.18),
+        rgba(181, 43, 43, 0.58)
+      ),
+      var(--red-dark);
     color: white;
-    box-shadow: 0 30px 80px rgba(17, 19, 17, 0.16);
+    box-shadow: 0 30px 80px rgba(84, 27, 23, 0.24);
   }
 
   .image-placeholder span {
-    font-size: 26px;
-    font-weight: 750;
+    font-size: 27px;
+    font-weight: 800;
   }
 
   .image-placeholder small {
-    margin-top: 8px;
-    opacity: 0.75;
+    margin-top: 9px;
+    opacity: 0.76;
   }
 
   .intro {
     padding: 120px 20px;
+    border-top: 1px solid rgba(181, 43, 43, 0.08);
+    border-bottom: 1px solid rgba(181, 43, 43, 0.08);
+    background:
+      linear-gradient(
+        135deg,
+        rgba(255, 250, 247, 0.95),
+        rgba(250, 235, 231, 0.9)
+      );
     text-align: center;
-    background: white;
   }
 
   .intro h2,
@@ -238,12 +331,12 @@ const { title = "Red Hot Philly Peppers" } = Astro.props;
     margin: 0;
     font-size: clamp(38px, 5vw, 64px);
     line-height: 1;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.045em;
   }
 
   .intro > p:last-child {
     max-width: 720px;
-    margin: 28px auto 0;
+    margin: 29px auto 0;
     color: var(--muted);
     font-size: 18px;
     line-height: 1.8;
@@ -256,7 +349,7 @@ const { title = "Red Hot Philly Peppers" } = Astro.props;
   }
 
   .section-heading {
-    margin-bottom: 44px;
+    margin-bottom: 46px;
     display: flex;
     align-items: end;
     justify-content: space-between;
@@ -265,41 +358,68 @@ const { title = "Red Hot Philly Peppers" } = Astro.props;
 
   .section-heading > a {
     color: var(--red);
-    font-weight: 750;
+    font-weight: 800;
+  }
+
+  .section-heading > a:hover {
+    color: var(--red-dark);
   }
 
   .pepper-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 22px;
+    gap: 24px;
   }
 
   .pepper-card {
     overflow: hidden;
     border: 1px solid var(--border);
-    border-radius: 6px;
-    background: white;
+    border-radius: 18px;
+    background: rgba(255, 250, 247, 0.92);
+    box-shadow: 0 12px 35px rgba(84, 27, 23, 0.07);
+    transition:
+      transform 0.25s ease,
+      border-color 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+
+  .pepper-card:hover {
+    border-color: rgba(181, 43, 43, 0.35);
+    box-shadow: 0 22px 48px rgba(134, 29, 29, 0.17);
+    transform: translateY(-7px);
   }
 
   .card-image {
     min-height: 270px;
     display: grid;
     place-items: center;
-    background: #e3e6df;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at center, #fff7f2, #ead7ce);
     color: var(--muted);
     font-size: 13px;
   }
 
+  .card-image img {
+    width: 100%;
+    height: 100%;
+    min-height: 270px;
+    display: block;
+    object-fit: contain;
+    object-position: center;
+  }
+
   .card-content {
-    padding: 26px;
+    padding: 27px;
+    border-top: 1px solid rgba(181, 43, 43, 0.08);
   }
 
   .heat {
-    margin: 0 0 10px;
+    margin: 0 0 11px;
     color: var(--red);
     font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
+    font-weight: 850;
+    letter-spacing: 0.09em;
     text-transform: uppercase;
   }
 
@@ -311,44 +431,62 @@ const { title = "Red Hot Philly Peppers" } = Astro.props;
   .card-content > p:not(.heat) {
     min-height: 72px;
     color: var(--muted);
-    line-height: 1.55;
+    line-height: 1.58;
   }
 
-  .card-content a {
+  .card-content a,
+  .card-content > span {
+    color: var(--red-dark);
     font-size: 14px;
-    font-weight: 750;
+    font-weight: 800;
   }
 
   .contact {
-    padding: 120px 20px;
+    padding: 125px 20px;
+    background:
+      radial-gradient(
+        circle at 15% 15%,
+        rgba(255, 255, 255, 0.08),
+        transparent 25%
+      ),
+      linear-gradient(135deg, #8f2020, #4f1517);
+    color: white;
     text-align: center;
-    background: var(--green);
+  }
+
+  .contact h2 {
     color: white;
   }
 
   .contact .eyebrow {
-    color: #ff9a8f;
+    color: #ffc1b8;
   }
 
   .contact > p:not(.eyebrow) {
     max-width: 650px;
-    margin: 26px auto 32px;
-    color: rgba(255, 255, 255, 0.74);
+    margin: 27px auto 33px;
+    color: rgba(255, 255, 255, 0.76);
     font-size: 18px;
     line-height: 1.7;
   }
 
   .light {
-    background: white;
-    color: var(--green);
+    background: var(--white);
+    color: var(--red-dark);
+    box-shadow: 0 12px 30px rgba(35, 9, 10, 0.2);
+  }
+
+  .light:hover {
+    background: var(--red-pale);
   }
 
   footer {
-    padding: 32px 20px;
+    padding: 35px max(20px, calc((100% - 1160px) / 2));
     display: flex;
     justify-content: space-between;
-    background: var(--black);
-    color: rgba(255, 255, 255, 0.65);
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    background: #291416;
+    color: rgba(255, 255, 255, 0.66);
     font-size: 13px;
   }
 
@@ -357,6 +495,12 @@ const { title = "Red Hot Philly Peppers" } = Astro.props;
   }
 
   @media (max-width: 850px) {
+    .site-header {
+      min-height: 76px;
+      margin-top: 12px;
+      padding: 0 18px;
+    }
+
     nav {
       display: none;
     }
@@ -364,7 +508,7 @@ const { title = "Red Hot Philly Peppers" } = Astro.props;
     .hero {
       grid-template-columns: 1fr;
       gap: 45px;
-      padding-top: 45px;
+      padding-top: 50px;
     }
 
     .hero-visual,
@@ -383,9 +527,30 @@ const { title = "Red Hot Philly Peppers" } = Astro.props;
   }
 
   @media (max-width: 520px) {
+    .site-header {
+      width: min(100% - 24px, 1200px);
+    }
+
+    .logo-mark {
+  width: 52px;
+  height: 52px;
+}
+
+.logo-text strong {
+  font-size: 1.35rem;
+}
+
+    .hero {
+      width: min(100% - 28px, 1200px);
+    }
+
     .hero-actions {
       align-items: stretch;
       flex-direction: column;
+    }
+
+    .varieties {
+      width: min(100% - 28px, 1200px);
     }
 
     footer {
