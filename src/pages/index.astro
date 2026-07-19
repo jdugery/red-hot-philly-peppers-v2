@@ -1,5 +1,9 @@
 ---
+import { getCollection } from "astro:content";
 import MainLayout from "../layouts/MainLayout.astro";
+
+const homeEntries = await getCollection("home");
+const home = homeEntries[0].data;
 
 const featuredPeppers = [
   {
@@ -20,470 +24,82 @@ const featuredPeppers = [
 ];
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <meta
-      name="description"
-      content="Red Hot Philly Peppers grows specialty, heirloom, and superhot pepper varieties in the Philadelphia area."
-    />
-    <title>Red Hot Philly Peppers</title>
-  </head>
+<MainLayout title="Red Hot Philly Peppers">
+  <section class="hero">
+    <div class="hero-content">
+      <p class="eyebrow">{home.eyebrow}</p>
 
-  <body>
-    <header class="site-header">
-      <a class="logo" href="/">
-        <span class="logo-mark">RH</span>
-        <span>
-          <strong>Red Hot Philly</strong>
-          <small>Peppers</small>
-        </span>
-      </a>
+      <h1 class="hero-title">{home.headline}</h1>
 
-      <nav>
-        <a href="#varieties">Varieties</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </header>
+      <p class="hero-description">
+        {home.description}
+      </p>
 
-    <main>
-      <section class="hero">
-        <div class="hero-content">
-          <p class="eyebrow">Grown in the Philadelphia area</p>
+      <div class="hero-actions">
+        <a class="button primary" href="#varieties">Explore varieties</a>
+        <a class="button secondary" href="#about">Our story</a>
+      </div>
+    </div>
 
-          <h1>Distinctive peppers.<br />Grown with purpose.</h1>
+    <div class="hero-visual">
+      <div class="image-placeholder">
+        <span>Featured pepper photo</span>
+        <small>We will add your picture here</small>
+      </div>
+    </div>
+  </section>
 
-          <p class="hero-description">
-            Specialty, heirloom, and superhot pepper varieties selected for
-            exceptional flavor, appearance, and heat.
-          </p>
+  <section class="intro" id="about">
+    <p class="eyebrow">Small farm. Serious peppers.</p>
 
-          <div class="hero-actions">
-            <a class="button primary" href="#varieties">Explore varieties</a>
-            <a class="button secondary" href="#about">Our story</a>
-          </div>
-        </div>
+    <h2>{home.aboutTitle}</h2>
 
-        <div class="hero-visual">
-          <div class="image-placeholder">
-            <span>Featured pepper photo</span>
-            <small>We will add your picture here</small>
-          </div>
-        </div>
-      </section>
+    <p>{home.aboutText}</p>
+  </section>
 
-      <section class="intro" id="about">
-        <p class="eyebrow">Small farm. Serious peppers.</p>
+  <section class="varieties" id="varieties">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Featured collection</p>
+        <h2>Pepper varieties</h2>
+      </div>
 
-        <h2>Uncommon varieties grown locally.</h2>
+      <a href="/peppers">View all varieties →</a>
+    </div>
 
-        <p>
-          Red Hot Philly Peppers is a small specialty pepper farm serving the
-          Philadelphia area. We grow everything from productive heirlooms to
-          some of the hottest peppers in the world.
-        </p>
-      </section>
+    <div class="pepper-grid">
+      {
+        featuredPeppers.map((pepper) => (
+          <article class="pepper-card">
+            <div class="card-image">Photo coming soon</div>
 
-      <section class="varieties" id="varieties">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Featured collection</p>
-            <h2>Pepper varieties</h2>
-          </div>
+            <div class="card-content">
+              <p class="heat">{pepper.heat}</p>
+              <h3>{pepper.name}</h3>
+              <p>{pepper.description}</p>
+              <a href="/peppers">View variety →</a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
 
-          <a href="/peppers">View all varieties →</a>
-        </div>
+  <section class="contact" id="contact">
+    <p class="eyebrow">Stay connected</p>
 
-        <div class="pepper-grid">
-          {
-            featuredPeppers.map((pepper) => (
-              <article class="pepper-card">
-                <div class="card-image">Photo coming soon</div>
+    <h2>{home.contactTitle}</h2>
 
-                <div class="card-content">
-                  <p class="heat">{pepper.heat}</p>
-                  <h3>{pepper.name}</h3>
-                  <p>{pepper.description}</p>
-                  <a href="/peppers">View variety →</a>
-                </div>
-              </article>
-            ))
-          }
-        </div>
-      </section>
+    <p>{home.contactText}</p>
 
-      <section class="contact" id="contact">
-        <p class="eyebrow">Stay connected</p>
-        <h2>Follow the growing season.</h2>
-        <p>
-          New varieties, harvest photos, growing updates, and availability will
-          be posted here.
-        </p>
-        <a class="button light" href="mailto:hello@redhotphillypeppers.com">
-          Contact us
-        </a>
-      </section>
-    </main>
-
-    <footer>
-      <p>© {new Date().getFullYear()} Red Hot Philly Peppers</p>
-      <p>Philadelphia, Pennsylvania</p>
-    </footer>
-  </body>
-</html>
+    <a class="button light" href="mailto:hello@redhotphillypeppers.com">
+      Contact us
+    </a>
+  </section>
+</MainLayout>
 
 <style>
-  :root {
-    --black: #111311;
-    --cream: #f6f3eb;
-    --white: #ffffff;
-    --red: #d53024;
-    --red-dark: #a91f17;
-    --green: #264c35;
-    --muted: #686d68;
-    --border: #dedfd9;
-  }
-
-  * {
-    box-sizing: border-box;
-  }
-
-  html {
-    scroll-behavior: smooth;
-  }
-
-  body {
-    margin: 0;
-    background: var(--cream);
-    color: var(--black);
-    font-family:
-      Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-      "Segoe UI", sans-serif;
-  }
-
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .site-header {
-    width: min(1200px, calc(100% - 40px));
-    min-height: 90px;
-    margin: auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .logo-mark {
-    width: 44px;
-    height: 44px;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    background: var(--red);
-    color: white;
-    font-size: 14px;
-    font-weight: 800;
-  }
-
-  .logo strong,
-  .logo small {
-    display: block;
-  }
-
-  .logo strong {
-    font-size: 16px;
-  }
-
-  .logo small {
-    color: var(--muted);
-    font-size: 13px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
-  nav {
-    display: flex;
-    gap: 28px;
-    font-size: 14px;
-    font-weight: 650;
-  }
-
-  nav a:hover {
-    color: var(--red);
-  }
-
-  .hero {
-    width: min(1200px, calc(100% - 40px));
-    min-height: 650px;
-    margin: auto;
-    padding: 70px 0 90px;
-    display: grid;
-    grid-template-columns: 1.05fr 0.95fr;
-    align-items: center;
-    gap: 70px;
-  }
-
-  .eyebrow {
-    margin: 0 0 18px;
-    color: var(--red);
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-  }
-
-  h1 {
-    max-width: 760px;
-    margin: 0;
-    font-size: clamp(52px, 7vw, 92px);
-    line-height: 0.96;
-    letter-spacing: -0.06em;
-  }
-
-  .hero-description {
-    max-width: 590px;
-    margin: 28px 0 0;
-    color: var(--muted);
-    font-size: 19px;
-    line-height: 1.65;
-  }
-
-  .hero-actions {
-    margin-top: 36px;
-    display: flex;
-    gap: 12px;
-  }
-
-  .button {
-    display: inline-flex;
-    min-height: 52px;
-    padding: 0 24px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: 750;
-  }
-
-  .primary {
-    background: var(--red);
-    color: white;
-  }
-
-  .primary:hover {
-    background: var(--red-dark);
-  }
-
-  .secondary {
-    border: 1px solid var(--black);
-  }
-
-  .hero-visual {
-    min-height: 520px;
-  }
-
-  .image-placeholder {
-    height: 100%;
-    min-height: 520px;
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    border-radius: 8px;
-    background:
-      linear-gradient(145deg, rgba(38, 76, 53, 0.2), rgba(213, 48, 36, 0.35)),
-      var(--green);
-    color: white;
-    box-shadow: 0 30px 80px rgba(17, 19, 17, 0.16);
-  }
-
-  .image-placeholder span {
-    font-size: 26px;
-    font-weight: 750;
-  }
-
-  .image-placeholder small {
-    margin-top: 8px;
-    opacity: 0.75;
-  }
-
-  .intro {
-    padding: 120px 20px;
-    text-align: center;
-    background: white;
-  }
-
-  .intro h2,
-  .section-heading h2,
-  .contact h2 {
-    margin: 0;
-    font-size: clamp(38px, 5vw, 64px);
-    line-height: 1;
-    letter-spacing: -0.04em;
-  }
-
-  .intro > p:last-child {
-    max-width: 720px;
-    margin: 28px auto 0;
-    color: var(--muted);
-    font-size: 18px;
-    line-height: 1.8;
-  }
-
-  .varieties {
-    width: min(1200px, calc(100% - 40px));
-    margin: auto;
-    padding: 120px 0;
-  }
-
-  .section-heading {
-    margin-bottom: 44px;
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    gap: 30px;
-  }
-
-  .section-heading > a {
-    color: var(--red);
-    font-weight: 750;
-  }
-
-  .pepper-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 22px;
-  }
-
-  .pepper-card {
-    overflow: hidden;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background: white;
-  }
-
-  .card-image {
-    min-height: 270px;
-    display: grid;
-    place-items: center;
-    background: #e3e6df;
-    color: var(--muted);
-    font-size: 13px;
-  }
-
-  .card-content {
-    padding: 26px;
-  }
-
-  .heat {
-    margin: 0 0 10px;
-    color: var(--red);
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .card-content h3 {
-    margin: 0;
-    font-size: 25px;
-  }
-
-  .card-content > p:not(.heat) {
-    min-height: 72px;
-    color: var(--muted);
-    line-height: 1.55;
-  }
-
-  .card-content a {
-    font-size: 14px;
-    font-weight: 750;
-  }
-
-  .contact {
-    padding: 120px 20px;
-    text-align: center;
-    background: var(--green);
-    color: white;
-  }
-
-  .contact .eyebrow {
-    color: #ff9a8f;
-  }
-
-  .contact > p:not(.eyebrow) {
-    max-width: 650px;
-    margin: 26px auto 32px;
-    color: rgba(255, 255, 255, 0.74);
-    font-size: 18px;
-    line-height: 1.7;
-  }
-
-  .light {
-    background: white;
-    color: var(--green);
-  }
-
-  footer {
-    padding: 32px 20px;
-    display: flex;
-    justify-content: space-between;
-    background: var(--black);
-    color: rgba(255, 255, 255, 0.65);
-    font-size: 13px;
-  }
-
-  footer p {
-    margin: 0;
-  }
-
-  @media (max-width: 850px) {
-    nav {
-      display: none;
-    }
-
-    .hero {
-      grid-template-columns: 1fr;
-      gap: 45px;
-      padding-top: 45px;
-    }
-
-    .hero-visual,
-    .image-placeholder {
-      min-height: 400px;
-    }
-
-    .pepper-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .section-heading {
-      align-items: start;
-      flex-direction: column;
-    }
-  }
-
-  @media (max-width: 520px) {
-    .hero-actions {
-      align-items: stretch;
-      flex-direction: column;
-    }
-
-    footer {
-      gap: 12px;
-      flex-direction: column;
-      text-align: center;
-    }
+  .hero-title {
+    white-space: pre-line;
   }
 </style>

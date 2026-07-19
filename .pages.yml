@@ -3,6 +3,46 @@ media:
   output: /images
 
 content:
+  - name: home
+    label: Homepage
+    type: file
+    path: src/content/home/home.md
+    fields:
+      - name: eyebrow
+        label: Top Small Text
+        type: string
+        required: true
+
+      - name: headline
+        label: Main Headline
+        type: text
+        required: true
+
+      - name: description
+        label: Hero Description
+        type: text
+        required: true
+
+      - name: aboutTitle
+        label: About Heading
+        type: string
+        required: true
+
+      - name: aboutText
+        label: About Text
+        type: text
+        required: true
+
+      - name: contactTitle
+        label: Contact Heading
+        type: string
+        required: true
+
+      - name: contactText
+        label: Contact Text
+        type: text
+        required: true
+
   - name: peppers
     label: Pepper Varieties
     type: collection

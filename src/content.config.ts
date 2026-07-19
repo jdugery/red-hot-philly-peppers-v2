@@ -17,4 +17,23 @@ const peppers = defineCollection({
   }),
 });
 
-export const collections = { peppers };
+const home = defineCollection({
+  loader: glob({
+    pattern: "**/*.{md,mdx}",
+    base: "./src/content/home",
+  }),
+  schema: z.object({
+    eyebrow: z.string(),
+    headline: z.string(),
+    description: z.string(),
+    aboutTitle: z.string(),
+    aboutText: z.string(),
+    contactTitle: z.string(),
+    contactText: z.string(),
+  }),
+});
+
+export const collections = {
+  peppers,
+  home,
+};
