@@ -5,23 +5,8 @@ import MainLayout from "../layouts/MainLayout.astro";
 const homeEntries = await getCollection("home");
 const home = homeEntries[0].data;
 
-const featuredPeppers = [
-  {
-    name: "Sugar Rush Stripey",
-    heat: "25,000–50,000 SHU",
-    description: "Sweet, tropical flavor with striking striped fruit.",
-  },
-  {
-    name: "7 Pot Primo",
-    heat: "1,000,000+ SHU",
-    description: "An extremely hot pepper with a distinctive pointed tail.",
-  },
-  {
-    name: "Rezha Macedonian",
-    heat: "Mild–Medium",
-    description: "A rare heirloom pepper known for its deeply textured skin.",
-  },
-];
+const peppers = await getCollection("peppers");
+const featuredPeppers = peppers.slice(0, 3);
 ---
 
 <MainLayout title="Red Hot Philly Peppers">
@@ -70,16 +55,30 @@ const featuredPeppers = [
     <div class="pepper-grid">
       {
         featuredPeppers.map((pepper) => (
-          <article class="pepper-card">
-            <div class="card-image">Photo coming soon</div>
+          <a class="pepper-card" href={`/peppers/${pepper.id}`}>
+            <div class="card-image">
+              {
+                pepper.data.image ? (
+                  <img
+                    src={pepper.data.image}
+                    alt={pepper.data.name}
+                  />
+                ) : (
+                  <span>Photo coming soon</span>
+                )
+              }
+            </div>
 
             <div class="card-content">
-              <p class="heat">{pepper.heat}</p>
-              <h3>{pepper.name}</h3>
-              <p>{pepper.description}</p>
-              <a href="/peppers">View variety →</a>
+              <p class="heat">{pepper.data.heat}</p>
+
+              <h3>{pepper.data.name}</h3>
+
+              <p>{pepper.data.description}</p>
+
+              <span>View variety →</span>
             </div>
-          </article>
+          </a>
         ))
       }
     </div>
@@ -99,7 +98,26 @@ const featuredPeppers = [
 </MainLayout>
 
 <style>
-  .hero-title {
-    white-space: pre-line;
-  }
+.hero-title {
+  white-space: pre-line;
+}
+
+.pepper-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+.card-image {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 10px;
+}
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
+  display: block;
+}
 </style>
