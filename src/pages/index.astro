@@ -7,6 +7,7 @@ const home = homeEntries[0].data;
 
 const peppers = await getCollection("peppers");
 const featuredPeppers = peppers.slice(0, 3);
+const heroPepper = featuredPeppers.find((pepper) => pepper.data.image);
 ---
 
 <MainLayout title="Red Hot Philly Peppers">
@@ -21,25 +22,69 @@ const featuredPeppers = peppers.slice(0, 3);
       </p>
 
       <div class="hero-actions">
-        <a class="button primary" href="#varieties">Explore varieties</a>
-        <a class="button secondary" href="#about">Our story</a>
+        <a class="button primary" href="#varieties">
+          Explore varieties
+        </a>
+
+        <a class="button secondary" href="#about">
+          Our story
+        </a>
+      </div>
+
+      <div class="hero-details">
+        <div>
+          <strong>Philadelphia grown</strong>
+          <span>Specialty peppers grown locally in the Philadelphia area.</span>
+        </div>
+
+        <div>
+          <strong>Rare varieties</strong>
+          <span>Heirloom, unusual, flavorful, and superhot peppers.</span>
+        </div>
       </div>
     </div>
 
     <div class="hero-visual">
-      <div class="image-placeholder">
-        <span>Featured pepper photo</span>
-        <small>We will add your picture here</small>
-      </div>
+      {
+        heroPepper?.data.image ? (
+          <a
+            class="hero-image"
+            href={`/peppers/${heroPepper.id}`}
+            aria-label={`View ${heroPepper.data.name}`}
+          >
+            <div class="hero-photo">
+              <img
+                src={heroPepper.data.image}
+                alt={heroPepper.data.name}
+              />
+            </div>
+
+            <div class="hero-image-info">
+              <div>
+                <p>Featured variety</p>
+                <strong>{heroPepper.data.name}</strong>
+              </div>
+
+              <span>{heroPepper.data.heat}</span>
+            </div>
+          </a>
+        ) : (
+          <div class="hero-image hero-placeholder">
+            <span>Featured pepper photo coming soon</span>
+          </div>
+        )
+      }
     </div>
   </section>
 
   <section class="intro" id="about">
-    <p class="eyebrow">Small farm. Serious peppers.</p>
+    <div class="intro-inner">
+      <p class="eyebrow">Small farm. Serious peppers.</p>
 
-    <h2>{home.aboutTitle}</h2>
+      <h2>{home.aboutTitle}</h2>
 
-    <p>{home.aboutText}</p>
+      <p>{home.aboutText}</p>
+    </div>
   </section>
 
   <section class="varieties" id="varieties">
@@ -62,11 +107,25 @@ const featuredPeppers = peppers.slice(0, 3);
                   <img
                     src={pepper.data.image}
                     alt={pepper.data.name}
+                    loading="lazy"
                   />
                 ) : (
                   <span>Photo coming soon</span>
                 )
               }
+
+              <div
+                class:list={[
+                  "availability-badge",
+                  pepper.data.available ? "available" : "unavailable",
+                ]}
+              >
+                {
+                  pepper.data.available
+                    ? "Available"
+                    : "Not currently available"
+                }
+              </div>
             </div>
 
             <div class="card-content">
@@ -76,7 +135,7 @@ const featuredPeppers = peppers.slice(0, 3);
 
               <p>{pepper.data.description}</p>
 
-              <span>View variety →</span>
+              <span class="card-link">View variety →</span>
             </div>
           </a>
         ))
@@ -85,39 +144,268 @@ const featuredPeppers = peppers.slice(0, 3);
   </section>
 
   <section class="contact" id="contact">
-    <p class="eyebrow">Stay connected</p>
+    <div class="contact-inner">
+      <p class="eyebrow">Stay connected</p>
 
-    <h2>{home.contactTitle}</h2>
+      <h2>{home.contactTitle}</h2>
 
-    <p>{home.contactText}</p>
+      <p>{home.contactText}</p>
 
-    <a class="button light" href="mailto:johnny@redhotphillypeppers.com">
-      Contact us
-    </a>
+      <a
+        class="button light"
+        href="mailto:johnny@redhotphillypeppers.com"
+      >
+        Contact us
+      </a>
+    </div>
   </section>
 </MainLayout>
 
 <style>
-.hero-title {
-  white-space: pre-line;
-}
+  .hero-title {
+    white-space: pre-line;
+  }
 
-.pepper-card {
-  display: block;
-  text-decoration: none;
-  color: inherit;
-}
-.card-image {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  border-radius: 10px;
-}
-.card-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center center;
-  display: block;
-}
+  .hero-content {
+    min-width: 0;
+  }
+
+  .hero-details {
+    margin-top: 46px;
+    padding-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 26px;
+    border-top: 1px solid rgba(181, 43, 43, 0.18);
+  }
+
+  .hero-details div {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .hero-details strong {
+    color: var(--red-dark);
+    font-size: 14px;
+  }
+
+  .hero-details span {
+    max-width: 230px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .hero-visual {
+    width: 100%;
+    max-width: 430px;
+    min-height: 0;
+    justify-self: end;
+  }
+
+  .hero-image {
+    width: 100%;
+    display: block;
+    overflow: hidden;
+    border: 1px solid rgba(181, 43, 43, 0.2);
+    border-radius: 22px;
+    background: rgba(255, 250, 247, 0.86);
+    box-shadow: 0 24px 60px rgba(84, 27, 23, 0.16);
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+
+  .hero-image:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 30px 70px rgba(84, 27, 23, 0.22);
+  }
+
+  .hero-photo {
+    width: 100%;
+    height: 390px;
+    padding: 28px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background:
+      radial-gradient(
+        circle at center,
+        rgba(255, 250, 247, 1),
+        rgba(240, 212, 206, 0.58)
+      );
+  }
+
+  .hero-photo img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    object-position: center;
+    transition: transform 0.35s ease;
+  }
+
+  .hero-image:hover .hero-photo img {
+    transform: scale(1.025);
+  }
+
+  .hero-image-info {
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    border-top: 1px solid rgba(181, 43, 43, 0.12);
+    background: rgba(255, 250, 247, 0.98);
+  }
+
+  .hero-image-info div {
+    min-width: 0;
+  }
+
+  .hero-image-info p {
+    margin: 0 0 5px;
+    color: var(--red);
+    font-size: 10px;
+    font-weight: 850;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .hero-image-info strong {
+    display: block;
+    overflow: hidden;
+    color: var(--black);
+    font-size: 19px;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+  }
+
+  .hero-image-info > span {
+    flex-shrink: 0;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 750;
+    text-align: right;
+  }
+
+  .hero-placeholder {
+    min-height: 390px;
+    padding: 30px;
+    display: grid;
+    place-items: center;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .intro-inner,
+  .contact-inner {
+    max-width: 760px;
+    margin: auto;
+  }
+
+  .pepper-card {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .card-image {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: 0;
+  }
+
+  .card-image img {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    padding: 14px;
+    display: block;
+    object-fit: contain;
+    object-position: center;
+    transition: transform 0.35s ease;
+  }
+
+  .pepper-card:hover .card-image img {
+    transform: scale(1.035);
+  }
+
+  .availability-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    padding: 7px 10px;
+    border-radius: 999px;
+    font-size: 9px;
+    font-weight: 850;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    box-shadow: 0 7px 20px rgba(35, 9, 10, 0.12);
+  }
+
+  .availability-badge.available {
+    background: rgba(255, 250, 247, 0.94);
+    color: var(--red-dark);
+  }
+
+  .availability-badge.unavailable {
+    background: rgba(41, 20, 22, 0.86);
+    color: rgba(255, 255, 255, 0.86);
+  }
+
+  .card-content h3 {
+    line-height: 1.15;
+  }
+
+  .card-link {
+    display: inline-block;
+    margin-top: 6px;
+    transition: transform 0.2s ease;
+  }
+
+  .pepper-card:hover .card-link {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 850px) {
+    .hero-visual {
+      width: min(100%, 500px);
+      max-width: 500px;
+      justify-self: start;
+    }
+
+    .hero-photo {
+      height: 410px;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .hero-details {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .hero-visual {
+      width: 100%;
+    }
+
+    .hero-photo {
+      height: 330px;
+      padding: 20px;
+    }
+
+    .hero-image-info {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .hero-image-info > span {
+      text-align: left;
+    }
+  }
 </style>
