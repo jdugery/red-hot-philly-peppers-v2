@@ -1,25 +1,6 @@
 ---
-import MainLayout from "../layouts/MainLayout.astro";
-
-const featuredPeppers = [
-  {
-    name: "Sugar Rush Stripey",
-    heat: "25,000–50,000 SHU",
-    description: "Sweet, tropical flavor with striking striped fruit.",
-  },
-  {
-    name: "7 Pot Primo",
-    heat: "1,000,000+ SHU",
-    description: "An extremely hot pepper with a distinctive pointed tail.",
-  },
-  {
-    name: "Rezha Macedonian",
-    heat: "Mild–Medium",
-    description: "A rare heirloom pepper known for its deeply textured skin.",
-  },
-];
+const { title = "Red Hot Philly Peppers" } = Astro.props;
 ---
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -29,7 +10,7 @@ const featuredPeppers = [
       name="description"
       content="Red Hot Philly Peppers grows specialty, heirloom, and superhot pepper varieties in the Philadelphia area."
     />
-    <title>Red Hot Philly Peppers</title>
+    <title>{title}</title>
   </head>
 
   <body>
@@ -50,82 +31,7 @@ const featuredPeppers = [
     </header>
 
     <main>
-      <section class="hero">
-        <div class="hero-content">
-          <p class="eyebrow">Grown in the Philadelphia area</p>
-
-          <h1>Distinctive peppers.<br />Grown with purpose.</h1>
-
-          <p class="hero-description">
-            Specialty, heirloom, and superhot pepper varieties selected for
-            exceptional flavor, appearance, and heat.
-          </p>
-
-          <div class="hero-actions">
-            <a class="button primary" href="#varieties">Explore varieties</a>
-            <a class="button secondary" href="#about">Our story</a>
-          </div>
-        </div>
-
-        <div class="hero-visual">
-          <div class="image-placeholder">
-            <span>Featured pepper photo</span>
-            <small>We will add your picture here</small>
-          </div>
-        </div>
-      </section>
-
-      <section class="intro" id="about">
-        <p class="eyebrow">Small farm. Serious peppers.</p>
-
-        <h2>Uncommon varieties grown locally.</h2>
-
-        <p>
-          Red Hot Philly Peppers is a small specialty pepper farm serving the
-          Philadelphia area. We grow everything from productive heirlooms to
-          some of the hottest peppers in the world.
-        </p>
-      </section>
-
-      <section class="varieties" id="varieties">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Featured collection</p>
-            <h2>Pepper varieties</h2>
-          </div>
-
-          <a href="/peppers">View all varieties →</a>
-        </div>
-
-        <div class="pepper-grid">
-          {
-            featuredPeppers.map((pepper) => (
-              <article class="pepper-card">
-                <div class="card-image">Photo coming soon</div>
-
-                <div class="card-content">
-                  <p class="heat">{pepper.heat}</p>
-                  <h3>{pepper.name}</h3>
-                  <p>{pepper.description}</p>
-                  <a href="/peppers">View variety →</a>
-                </div>
-              </article>
-            ))
-          }
-        </div>
-      </section>
-
-      <section class="contact" id="contact">
-        <p class="eyebrow">Stay connected</p>
-        <h2>Follow the growing season.</h2>
-        <p>
-          New varieties, harvest photos, growing updates, and availability will
-          be posted here.
-        </p>
-        <a class="button light" href="mailto:hello@redhotphillypeppers.com">
-          Contact us
-        </a>
-      </section>
+     <slot />
     </main>
 
     <footer>
@@ -135,7 +41,7 @@ const featuredPeppers = [
   </body>
 </html>
 
-<style>
+<style is:global>
   :root {
     --black: #111311;
     --cream: #f6f3eb;

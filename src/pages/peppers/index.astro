@@ -1,215 +1,101 @@
-
 ---
-import { getCollection } from "astro:content";
-
-const peppers = await getCollection("peppers");
----
-
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>Pepper Varieties | Red Hot Philly Peppers</title>
-  </head>
-
-  <body>
-    <header>
-      <a href="/">Red Hot Philly Peppers</a>
-
-      <nav>
-        <a href="/">Home</a>
-        <a href="/peppers">Varieties</a>
-      </nav>
-    </header>
-
-    <main>
-      <section class="heading">
-        <p>Our collection</p>
-        <h1>Pepper varieties</h1>
-        <span>
-          Specialty, heirloom, and superhot peppers grown in the Philadelphia
-          area.
-        </span>
-      </section>
-
-      <section class="grid">
+import MainLayout from "../../layouts/MainLayout.astro";
+const featuredPeppers = [
   {
-    peppers.map((pepper) => (
-      <article>
-        <div class="image">Photo coming soon</div>
+    name: "Sugar Rush Stripey",
+    heat: "25,000–50,000 SHU",
+    description: "Sweet, tropical flavor with striking striped fruit.",
+  },
+  {
+    name: "7 Pot Primo",
+    heat: "1,000,000+ SHU",
+    description: "An extremely hot pepper with a distinctive pointed tail.",
+  },
+  {
+    name: "Rezha Macedonian",
+    heat: "Mild–Medium",
+    description: "A rare heirloom pepper known for its deeply textured skin.",
+  },
+];
+---
 
-        <div class="content">
-          <p class="heat">{pepper.data.heat}</p>
-          <h2>{pepper.data.name}</h2>
-          <p class="species">{pepper.data.species}</p>
-          <p>{pepper.data.description}</p>
+<MainLayout title="Red Hot Philly Peppers">
+  <section class="hero">
+    <div class="hero-content">
+      <p class="eyebrow">Grown in the Philadelphia area</p>
 
-          {pepper.data.color && (
-            <dl>
-              <div>
-                <dt>Color</dt>
-                <dd>{pepper.data.color}</dd>
-              </div>
-            </dl>
-          )}
-        </div>
-      </article>
-    ))
-  }
-</section>
-    </main>
-  </body>
-</html>
+      <h1>Distinctive peppers.<br />Grown with purpose.</h1>
 
-<style>
-  * {
-    box-sizing: border-box;
-  }
+      <p class="hero-description">
+        Specialty, heirloom, and superhot pepper varieties selected for
+        exceptional flavor, appearance, and heat.
+      </p>
 
-  body {
-    margin: 0;
-    background: #f6f3eb;
-    color: #111311;
-    font-family:
-      Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-      "Segoe UI", sans-serif;
-  }
+      <div class="hero-actions">
+        <a class="button primary" href="#varieties">Explore varieties</a>
+        <a class="button secondary" href="#about">Our story</a>
+      </div>
+    </div>
 
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
+    <div class="hero-visual">
+      <div class="image-placeholder">
+        <span>Featured pepper photo</span>
+        <small>We will add your picture here</small>
+      </div>
+    </div>
+  </section>
 
-  header {
-    width: min(1200px, calc(100% - 40px));
-    min-height: 90px;
-    margin: auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-weight: 750;
-  }
+  <section class="intro" id="about">
+    <p class="eyebrow">Small farm. Serious peppers.</p>
 
-  nav {
-    display: flex;
-    gap: 28px;
-    font-size: 14px;
-  }
+    <h2>Uncommon varieties grown locally.</h2>
 
-  nav a:hover {
-    color: #d53024;
-  }
+    <p>
+      Red Hot Philly Peppers is a small specialty pepper farm serving the
+      Philadelphia area. We grow everything from productive heirlooms to some
+      of the hottest peppers in the world.
+    </p>
+  </section>
 
-  main {
-    width: min(1200px, calc(100% - 40px));
-    margin: auto;
-    padding: 70px 0 120px;
-  }
+  <section class="varieties" id="varieties">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Featured collection</p>
+        <h2>Pepper varieties</h2>
+      </div>
 
-  .heading {
-    max-width: 760px;
-    margin-bottom: 60px;
-  }
+      <a href="/peppers">View all varieties →</a>
+    </div>
 
-  .heading > p {
-    margin: 0 0 16px;
-    color: #d53024;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-  }
+    <div class="pepper-grid">
+      {
+        featuredPeppers.map((pepper) => (
+          <article class="pepper-card">
+            <div class="card-image">Photo coming soon</div>
 
-  h1 {
-    margin: 0 0 22px;
-    font-size: clamp(52px, 7vw, 84px);
-    line-height: 0.96;
-    letter-spacing: -0.055em;
-  }
+            <div class="card-content">
+              <p class="heat">{pepper.heat}</p>
+              <h3>{pepper.name}</h3>
+              <p>{pepper.description}</p>
+              <a href="/peppers">View variety →</a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
 
-  .heading span {
-    color: #686d68;
-    font-size: 19px;
-    line-height: 1.65;
-  }
+  <section class="contact" id="contact">
+    <p class="eyebrow">Stay connected</p>
+    <h2>Follow the growing season.</h2>
 
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 22px;
-  }
+    <p>
+      New varieties, harvest photos, growing updates, and availability will be
+      posted here.
+    </p>
 
-  article {
-    overflow: hidden;
-    border: 1px solid #dedfd9;
-    border-radius: 6px;
-    background: white;
-  }
-
-  .image {
-    min-height: 270px;
-    display: grid;
-    place-items: center;
-    background: #e3e6df;
-    color: #686d68;
-    font-size: 13px;
-  }
-
-  .content {
-    padding: 26px;
-  }
-
-  .heat {
-    margin: 0 0 10px;
-    color: #d53024;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  h2 {
-    margin: 0;
-    font-size: 26px;
-  }
-
-  .species {
-    margin-top: 8px;
-    color: #264c35;
-    font-style: italic;
-  }
-
-  .content > p:last-of-type {
-    color: #686d68;
-    line-height: 1.6;
-  }
-
-  dl {
-    margin: 24px 0 0;
-    padding-top: 18px;
-    border-top: 1px solid #dedfd9;
-  }
-
-  dl div {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-  }
-
-  dt {
-    color: #686d68;
-  }
-
-  dd {
-    margin: 0;
-    font-weight: 700;
-    text-align: right;
-  }
-
-  @media (max-width: 850px) {
-    .grid {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>
+    <a class="button light" href="mailto:hello@redhotphillypeppers.com">
+      Contact us
+    </a>
+  </section>
+</MainLayout>

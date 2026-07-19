@@ -1,0 +1,49 @@
+media:
+  input: public/images
+  output: /images
+
+content:
+  - name: peppers
+    label: Pepper Varieties
+    type: collection
+    path: src/content/peppers
+    filename: "{primary}.md"
+    view:
+      fields: [name, species, heat, available]
+    fields:
+      - name: name
+        label: Name
+        type: string
+        required: true
+
+      - name: species
+        label: Species
+        type: string
+        required: true
+
+      - name: heat
+        label: Heat
+        type: string
+        required: true
+
+      - name: color
+        label: Color
+        type: string
+
+      - name: description
+        label: Short Description
+        type: text
+        required: true
+
+      - name: image
+        label: Main Photo
+        type: image
+
+      - name: available
+        label: Available
+        type: boolean
+        default: false
+
+      - name: body
+        label: Full Description
+        type: rich-text

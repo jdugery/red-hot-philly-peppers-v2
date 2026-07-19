@@ -1,0 +1,85 @@
+---
+import { getCollection, render } from "astro:content";
+import MainLayout from "../../layouts/MainLayout.astro";
+
+export async function getStaticPaths() {
+  const peppers = await getCollection("peppers");
+
+  return peppers.map((pepper) => ({
+    params: { id: pepper.id },
+    props: { pepper },
+  }));
+}
+
+const { pepper } = Astro.props;
+const { Content } = await render(pepper);
+---
+
+<MainLayout title={`${pepper.data.name} | Red Hot Philly Peppers`}>
+  <section class="pepper-detail">
+    <a class="back-link" href="/peppers">← All pepper varieties</a>
+
+    <p class="eyebrow">{pepper.data.heat}</p>
+    <h1>{pepper.data.name}</h1>
+
+    <p class="species">{pepper.data.species}</p>
+
+    <p class="description">
+      {pepper.data.description}
+    </p>
+
+    {
+      pepper.data.color && (
+        <p><strong>Color:</strong> {pepper.data.color}</p>
+      )
+    }
+
+    <p>
+      <strong>Availability:</strong>
+      {pepper.data.available ? " Available" : " Not currently available"}
+    </p>
+
+    <div class="body-content">
+      <Content />
+    </div>
+  </section>
+</MainLayout>
+
+<style>
+  .pepper-detail {
+    width: min(850px, calc(100% - 40px));
+    min-height: 600px;
+    margin: auto;
+    padding: 80px 0 120px;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 55px;
+    color: var(--red);
+    font-weight: 750;
+  }
+
+  .pepper-detail h1 {
+    margin-bottom: 18px;
+  }
+
+  .species {
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .description {
+    max-width: 700px;
+    margin: 30px 0;
+    font-size: 20px;
+    line-height: 1.7;
+  }
+
+  .body-content {
+    margin-top: 45px;
+    padding-top: 30px;
+    border-top: 1px solid var(--border);
+    line-height: 1.8;
+  }
+</style>
