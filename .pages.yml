@@ -48,8 +48,14 @@ content:
     type: collection
     path: src/content/peppers
     filename: "{primary}.md"
+
     view:
-      fields: [name, species, heat, available]
+      fields:
+        - name
+        - species
+        - heat
+        - available
+
     fields:
       - name: name
         label: Name
@@ -79,10 +85,29 @@ content:
         label: Main Photo
         type: image
 
+      - name: gallery
+        label: Gallery Photos
+        type: list
+        default: []
+        items:
+          type: image
+
       - name: available
         label: Available
         type: boolean
         default: false
+
+      - name: seedPrice
+        label: Seed Price
+        type: number
+
+      - name: seedQuantity
+        label: Seeds Per Pack
+        type: string
+
+      - name: purchaseUrl
+        label: Purchase Link
+        type: string
 
       - name: body
         label: Full Description
