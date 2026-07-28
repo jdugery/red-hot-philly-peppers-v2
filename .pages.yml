@@ -85,12 +85,11 @@ content:
         label: Main Photo
         type: image
 
-      - name: gallery
+            - name: gallery
         label: Gallery Photos
-        type: list
-        default: []
-        items:
-          type: image
+        type: image
+        options:
+          multiple: true
 
       - name: available
         label: Available
