@@ -81,7 +81,7 @@ content:
         type: text
         required: true
 
-            - name: image
+      - name: image
         label: Main Photo
         type: image
 
