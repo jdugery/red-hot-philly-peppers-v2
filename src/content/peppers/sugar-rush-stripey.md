@@ -16,5 +16,5 @@ available: true
 seedPrice: 5
 seedQuantity: 15+
 isolatedAvailable: false
-isolatedPrice: 2
+isolatedPrice: 99
 ---
