@@ -13,6 +13,21 @@ export async function getStaticPaths() {
 
 const { pepper } = Astro.props;
 const { Content } = await render(pepper);
+
+const galleryImages = pepper.data.gallery ?? [];
+
+const allImages = [
+  ...(pepper.data.image ? [pepper.data.image] : []),
+  ...galleryImages.filter((image) => image !== pepper.data.image),
+];
+
+const formattedPrice =
+  typeof pepper.data.seedPrice === "number"
+    ? new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(pepper.data.seedPrice)
+    : null;
 ---
 
 <MainLayout title={`${pepper.data.name} | Red Hot Philly Peppers`}>
@@ -22,13 +37,41 @@ const { Content } = await render(pepper);
     <section class="pepper-hero">
       <div class="image-column">
         {
-          pepper.data.image ? (
-            <div class="detail-image">
-              <img
-                src={pepper.data.image}
-                alt={`${pepper.data.name} pepper`}
-              />
-            </div>
+          allImages.length > 0 ? (
+            <>
+              <div class="detail-image">
+                <img
+                  id="main-pepper-image"
+                  src={allImages[0]}
+                  alt={`${pepper.data.name} pepper`}
+                />
+              </div>
+
+              {allImages.length > 1 && (
+                <div
+                  class="thumbnail-grid"
+                  aria-label={`${pepper.data.name} image gallery`}
+                >
+                  {allImages.map((image, index) => (
+                    <button
+                      class:list={[
+                        "thumbnail-button",
+                        index === 0 && "active",
+                      ]}
+                      type="button"
+                      data-image={image}
+                      aria-label={`View ${pepper.data.name} image ${index + 1}`}
+                    >
+                      <img
+                        src={image}
+                        alt=""
+                        loading="lazy"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </>
           ) : (
             <div class="detail-image image-placeholder">
               <span>Photo coming soon</span>
@@ -38,6 +81,8 @@ const { Content } = await render(pepper);
       </div>
 
       <div class="details-column">
+        <p class="pepper-label">Pepper variety</p>
+
         <h1>{pepper.data.name}</h1>
 
         <p class="description">
@@ -58,21 +103,80 @@ const { Content } = await render(pepper);
           {
             pepper.data.color && (
               <div class="fact-row">
-                <span>Color</span>
+                <span>Ripe color</span>
                 <strong>{pepper.data.color}</strong>
               </div>
             )
           }
-
-          <div class="fact-row">
-            <span>Availability</span>
-            <strong>
-              {pepper.data.available
-                ? "Available"
-                : "Not currently available"}
-            </strong>
-          </div>
         </div>
+
+        <section class="seed-card">
+          <div class="seed-card-top">
+            <div>
+              <p class="seed-label">Seeds</p>
+              <h2>Grow {pepper.data.name}</h2>
+            </div>
+
+            <span
+              class:list={[
+                "availability-badge",
+                pepper.data.available ? "available" : "unavailable",
+              ]}
+            >
+              {pepper.data.available ? "Available" : "Unavailable"}
+            </span>
+          </div>
+
+          {
+            pepper.data.available ? (
+              <>
+                {(formattedPrice || pepper.data.seedQuantity) && (
+                  <div class="seed-details">
+                    {formattedPrice && (
+                      <strong class="seed-price">{formattedPrice}</strong>
+                    )}
+
+                    {pepper.data.seedQuantity && (
+                      <span class="seed-quantity">
+                        {pepper.data.seedQuantity}
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                <p class="seed-note">
+                  Small-batch pepper seeds from plants grown in the Philadelphia
+                  area.
+                </p>
+
+                {pepper.data.purchaseUrl ? (
+                  <a
+                    class="purchase-button"
+                    href={pepper.data.purchaseUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Purchase seeds
+                  </a>
+                ) : (
+                  <a class="purchase-button" href="/contact">
+                    Purchase Seeds
+                  </a>
+                )}
+              </>
+            ) : (
+              <>
+                <p class="seed-note">
+                  Seeds for this variety are not currently available.
+                </p>
+
+                <a class="secondary-button" href="/contact">
+                  Ask about future availability
+                </a>
+              </>
+            )
+          }
+        </section>
       </div>
     </section>
 
@@ -82,43 +186,82 @@ const { Content } = await render(pepper);
   </main>
 </MainLayout>
 
+<script>
+  const mainImage = document.querySelector(
+    "#main-pepper-image",
+  ) as HTMLImageElement | null;
+
+  const thumbnailButtons = document.querySelectorAll<HTMLButtonElement>(
+    ".thumbnail-button",
+  );
+
+  thumbnailButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const selectedImage = button.dataset.image;
+
+      if (!mainImage || !selectedImage) {
+        return;
+      }
+
+      mainImage.src = selectedImage;
+
+      thumbnailButtons.forEach((thumbnail) => {
+        thumbnail.classList.remove("active");
+      });
+
+      button.classList.add("active");
+    });
+  });
+</script>
+
 <style>
   .pepper-page {
     width: min(1180px, calc(100% - 40px));
     margin: auto;
-    padding: 55px 0 110px;
+    padding: 48px 0 110px;
   }
 
   .back-link {
-    display: inline-block;
-    margin-bottom: 38px;
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 34px;
     color: var(--red);
     font-weight: 750;
     text-decoration: none;
   }
 
+  .back-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
   .pepper-hero {
     display: grid;
-    grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.95fr);
+    grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
     gap: 64px;
     align-items: start;
   }
 
+  .image-column {
+    min-width: 0;
+  }
+
   .detail-image {
     width: 100%;
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 4 / 4.6;
     overflow: hidden;
     border: 1px solid var(--border);
     border-radius: 18px;
-    background: #eee9df;
+    background: #e8e2d4;
+    box-shadow: 0 18px 45px rgba(50, 40, 25, 0.1);
   }
 
   .detail-image img {
+    display: block;
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     object-position: center;
-    display: block;
   }
 
   .image-placeholder {
@@ -127,32 +270,82 @@ const { Content } = await render(pepper);
     color: var(--muted);
   }
 
+  .thumbnail-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .thumbnail-button {
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    padding: 0;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    background: #e8e2d4;
+    opacity: 0.72;
+    transition:
+      opacity 150ms ease,
+      border-color 150ms ease,
+      transform 150ms ease;
+  }
+
+  .thumbnail-button:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+
+  .thumbnail-button.active {
+    border-color: var(--red);
+    opacity: 1;
+  }
+
+  .thumbnail-button img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
   .details-column {
     position: sticky;
-    top: 35px;
-    padding-top: 8px;
+    top: 30px;
+    padding-top: 6px;
+  }
+
+  .pepper-label,
+  .seed-label {
+    margin: 0 0 10px;
+    color: var(--red);
+    font-size: 12px;
+    font-weight: 850;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
 
   .details-column h1 {
     max-width: 720px;
     margin: 0;
-    font-size: clamp(52px, 7vw, 92px);
-    line-height: 0.95;
-    letter-spacing: -0.055em;
+    font-size: clamp(50px, 6vw, 84px);
+    line-height: 0.96;
+    letter-spacing: -0.05em;
   }
 
   .description {
     max-width: 620px;
-    margin: 30px 0 34px;
-    font-size: 21px;
-    line-height: 1.65;
+    margin: 26px 0 30px;
+    color: var(--text);
+    font-size: 20px;
+    line-height: 1.62;
   }
 
   .facts {
     overflow: hidden;
     border: 1px solid var(--border);
     border-radius: 14px;
-    background: rgba(255, 255, 255, 0.45);
+    background: rgba(255, 255, 255, 0.5);
   }
 
   .fact-row {
@@ -160,7 +353,7 @@ const { Content } = await render(pepper);
     justify-content: space-between;
     align-items: baseline;
     gap: 28px;
-    padding: 18px 20px;
+    padding: 17px 20px;
   }
 
   .fact-row + .fact-row {
@@ -173,6 +366,115 @@ const { Content } = await render(pepper);
 
   .fact-row strong {
     text-align: right;
+  }
+
+  .seed-card {
+    margin-top: 22px;
+    padding: 24px;
+    border: 1px solid rgba(41, 76, 50, 0.22);
+    border-radius: 16px;
+    background:
+      linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.78),
+        rgba(236, 230, 213, 0.88)
+      );
+    box-shadow: 0 14px 35px rgba(50, 40, 25, 0.08);
+  }
+
+  .seed-card-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .seed-card h2 {
+    margin: 0;
+    font-size: 25px;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+  }
+
+  .availability-badge {
+    flex: 0 0 auto;
+    padding: 7px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .availability-badge.available {
+    color: #225334;
+    background: #dcebdc;
+  }
+
+  .availability-badge.unavailable {
+    color: #6c6254;
+    background: #e7e0d3;
+  }
+
+  .seed-details {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-top: 22px;
+  }
+
+  .seed-price {
+    color: var(--red);
+    font-size: 30px;
+    line-height: 1;
+  }
+
+  .seed-quantity {
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .seed-note {
+    margin: 16px 0 20px;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .purchase-button,
+  .secondary-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 50px;
+    padding: 0 20px;
+    border-radius: 10px;
+    font-weight: 800;
+    text-align: center;
+    text-decoration: none;
+    box-sizing: border-box;
+    transition:
+      transform 150ms ease,
+      background 150ms ease;
+  }
+
+  .purchase-button {
+    color: white;
+    background: var(--red);
+  }
+
+  .purchase-button:hover {
+    transform: translateY(-2px);
+    filter: brightness(0.94);
+  }
+
+  .secondary-button {
+    color: var(--red);
+    border: 1px solid var(--red);
+    background: transparent;
+  }
+
+  .secondary-button:hover {
+    background: rgba(163, 45, 38, 0.06);
   }
 
   .body-content {
@@ -190,12 +492,12 @@ const { Content } = await render(pepper);
 
   @media (max-width: 850px) {
     .pepper-page {
-      padding-top: 35px;
+      padding-top: 34px;
     }
 
     .pepper-hero {
       grid-template-columns: 1fr;
-      gap: 34px;
+      gap: 36px;
     }
 
     .details-column {
@@ -204,25 +506,42 @@ const { Content } = await render(pepper);
     }
 
     .details-column h1 {
-      font-size: clamp(48px, 13vw, 76px);
+      font-size: clamp(46px, 13vw, 74px);
     }
 
     .detail-image {
-      aspect-ratio: 4 / 4.5;
+      aspect-ratio: 4 / 4.2;
     }
 
     .body-content {
-      margin-top: 55px;
+      margin-top: 54px;
     }
   }
 
   @media (max-width: 520px) {
+    .pepper-page {
+      width: min(100% - 28px, 1180px);
+    }
+
+    .thumbnail-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
     .fact-row {
       align-items: flex-start;
     }
 
     .fact-row strong {
       max-width: 62%;
+    }
+
+    .seed-card-top {
+      display: block;
+    }
+
+    .availability-badge {
+      display: inline-block;
+      margin-top: 14px;
     }
   }
 </style>
