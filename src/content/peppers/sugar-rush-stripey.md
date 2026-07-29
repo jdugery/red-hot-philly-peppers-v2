@@ -6,7 +6,7 @@ color: Peach / Red
 description: A peach colored baccatum with red stripes, and a twisty pod shape.
 image: /images/IMG_1107-1.jpeg
 gallery:
-  - image: /images/IMG_4278 2-2.jpeg
+  - image: /images/IMG_4278-2-2.jpeg
     caption: SRSP pre ripening stage
   - image: /images/IMG_4664-1.jpeg
     caption: SRSP starting to ripen

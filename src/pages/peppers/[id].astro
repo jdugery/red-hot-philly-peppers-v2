@@ -14,11 +14,21 @@ export async function getStaticPaths() {
 const { pepper } = Astro.props;
 const { Content } = await render(pepper);
 
-const galleryImages = pepper.data.gallery ?? [];
+const galleryItems = pepper.data.gallery ?? [];
 
 const allImages = [
-  ...(pepper.data.image ? [pepper.data.image] : []),
-  ...galleryImages.filter((image) => image !== pepper.data.image),
+  ...(pepper.data.image
+    ? [
+        {
+          image: pepper.data.image,
+          caption: "",
+        },
+      ]
+    : []),
+
+  ...galleryItems.filter(
+    (item) => item.image !== pepper.data.image,
+  ),
 ];
 
 const formattedPrice =
@@ -39,31 +49,47 @@ const formattedPrice =
         {
           allImages.length > 0 ? (
             <>
-              <div class="detail-image">
-                <img
-                  id="main-pepper-image"
-                  src={allImages[0]}
-                  alt={`${pepper.data.name} pepper`}
-                />
-              </div>
+              <figure class="main-image-figure">
+                <div class="detail-image">
+                  <img
+                    id="main-pepper-image"
+                    src={allImages[0].image}
+                    alt={
+                      allImages[0].caption ||
+                      `${pepper.data.name} pepper`
+                    }
+                  />
+                </div>
+
+                <figcaption
+                  id="image-caption"
+                  class:list={[
+                    "image-caption",
+                    !allImages[0].caption && "empty",
+                  ]}
+                >
+                  {allImages[0].caption}
+                </figcaption>
+              </figure>
 
               {allImages.length > 1 && (
                 <div
                   class="thumbnail-grid"
                   aria-label={`${pepper.data.name} image gallery`}
                 >
-                  {allImages.map((image, index) => (
+                  {allImages.map((item, index) => (
                     <button
                       class:list={[
                         "thumbnail-button",
                         index === 0 && "active",
                       ]}
                       type="button"
-                      data-image={image}
+                      data-image={item.image}
+                      data-caption={item.caption ?? ""}
                       aria-label={`View ${pepper.data.name} image ${index + 1}`}
                     >
                       <img
-                        src={image}
+                        src={item.image}
                         alt=""
                         loading="lazy"
                       />
@@ -133,13 +159,15 @@ const formattedPrice =
                 {(formattedPrice || pepper.data.seedQuantity) && (
                   <div class="seed-details">
                     {formattedPrice && (
-                      <strong class="seed-price">{formattedPrice}</strong>
+                      <strong class="seed-price">
+                        {formattedPrice}
+                      </strong>
                     )}
 
                     {pepper.data.seedQuantity && (
                       <span class="seed-quantity">
-                        {pepper.data.seedQuantity}
-                      </span>
+                        QTY: {pepper.data.seedQuantity}
+                       </span>
                     )}
                   </div>
                 )}
@@ -159,8 +187,11 @@ const formattedPrice =
                     Purchase seeds
                   </a>
                 ) : (
-                  <a class="purchase-button" href="mailto:johnny@redhotphillypeppers.com">
-                    Purchase Seeds
+                  <a
+                    class="purchase-button"
+                    href="mailto:johnny@redhotphillypeppers.com"
+                  >
+                    Purchase seeds
                   </a>
                 )}
               </>
@@ -170,7 +201,10 @@ const formattedPrice =
                   Seeds for this variety are not currently available.
                 </p>
 
-                <a class="secondary-button" href="mailto:johnny@redhotphillypeppers.com">
+                <a
+                  class="secondary-button"
+                  href="mailto:johnny@redhotphillypeppers.com"
+                >
                   Ask about future availability
                 </a>
               </>
@@ -191,19 +225,34 @@ const formattedPrice =
     "#main-pepper-image",
   ) as HTMLImageElement | null;
 
-  const thumbnailButtons = document.querySelectorAll<HTMLButtonElement>(
-    ".thumbnail-button",
-  );
+  const captionElement = document.querySelector(
+    "#image-caption",
+  ) as HTMLElement | null;
+
+  const thumbnailButtons =
+    document.querySelectorAll<HTMLButtonElement>(
+      ".thumbnail-button",
+    );
 
   thumbnailButtons.forEach((button) => {
     button.addEventListener("click", () => {
       const selectedImage = button.dataset.image;
+      const selectedCaption = button.dataset.caption ?? "";
 
       if (!mainImage || !selectedImage) {
         return;
       }
 
       mainImage.src = selectedImage;
+      mainImage.alt = selectedCaption || "Pepper image";
+
+      if (captionElement) {
+        captionElement.textContent = selectedCaption;
+        captionElement.classList.toggle(
+          "empty",
+          selectedCaption.length === 0,
+        );
+      }
 
       thumbnailButtons.forEach((thumbnail) => {
         thumbnail.classList.remove("active");
@@ -246,6 +295,10 @@ const formattedPrice =
     min-width: 0;
   }
 
+  .main-image-figure {
+    margin: 0;
+  }
+
   .detail-image {
     width: 100%;
     aspect-ratio: 4 / 4.6;
@@ -262,6 +315,19 @@ const formattedPrice =
     height: 100%;
     object-fit: cover;
     object-position: center;
+  }
+
+  .image-caption {
+    min-height: 22px;
+    margin: 12px 8px 0;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  .image-caption.empty {
+    visibility: hidden;
   }
 
   .image-placeholder {
