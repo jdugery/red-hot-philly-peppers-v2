@@ -15,6 +15,6 @@ gallery:
 available: true
 seedPrice: 5
 seedQuantity: 15+
-isolatedAvailable: false
-isolatedPrice: 99
+isolatedAvailable: true
+isolatedPrice: 3
 ---
