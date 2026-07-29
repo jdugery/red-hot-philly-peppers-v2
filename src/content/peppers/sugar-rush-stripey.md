@@ -11,5 +11,4 @@ gallery:
 available: true
 seedPrice: 5
 seedQuantity: 15+
-purchaseUrl: EMAIL JOHNNY@REDHOTPHILLYPEPPERS.COM TO PURCHASE
 ---
