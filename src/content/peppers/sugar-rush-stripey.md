@@ -6,9 +6,9 @@ color: Peach / Red
 description: A peach colored baccatum with red stripes, and a twisty pod shape.
 image: /images/IMG_1107-1.jpeg
 gallery:
+  - /images/img4278-2.jpeg
   - /images/img4664-2.jpeg
   - /images/img4142.jpeg
-  - /images/img4278-2.jpeg
 available: true
 seedPrice: 5
 seedQuantity: 15+
