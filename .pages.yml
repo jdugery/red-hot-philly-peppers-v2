@@ -1,3 +1,8 @@
+media:
+  input: public/images
+  output: /images
+
+content:
   - name: peppers
     label: Pepper Varieties
     type: collection
