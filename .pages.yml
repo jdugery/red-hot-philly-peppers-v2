@@ -74,3 +74,12 @@ content:
       - name: purchaseUrl
         label: Purchase Link
         type: string
+      
+      - name: isolatedAvailable
+        label: Isolated Seeds Available
+        type: boolean
+        default: false
+
+      - name: isolatedPrice
+        label: Isolated Seed Upgrade Price
+        type: number
