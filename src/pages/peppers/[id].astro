@@ -173,10 +173,31 @@ const formattedPrice =
                 )}
 
                 <p class="seed-note">
-                  Small-batch pepper seeds from plants grown in the Philadelphia
-                  area.
+                  Germination tested. Open pollinated unless otherwise noted.
                 </p>
+{
+  pepper.data.isolatedAvailable && (
+    <div class="isolated-option">
+      <div>
+        <strong class="isolated-title">
+          Isolated seeds available
+        </strong>
 
+        <span class="isolated-description">
+          Optional isolated-seed upgrade
+        </span>
+      </div>
+
+      {
+        typeof pepper.data.isolatedPrice === "number" && (
+          <strong class="isolated-price">
+            +${pepper.data.isolatedPrice.toFixed(2)}
+          </strong>
+        )
+      }
+    </div>
+  )
+}
                 {pepper.data.purchaseUrl ? (
                   <a
                     class="purchase-button"
@@ -504,7 +525,38 @@ const formattedPrice =
     font-size: 15px;
     line-height: 1.55;
   }
+.isolated-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  margin: 0 0 20px;
+  padding: 14px 16px;
+  border: 1px solid rgba(41, 76, 50, 0.2);
+  border-radius: 10px;
+  background: rgba(41, 76, 50, 0.07);
+}
 
+.isolated-option > div {
+  display: grid;
+  gap: 3px;
+}
+
+.isolated-title {
+  color: var(--text);
+  font-size: 15px;
+}
+
+.isolated-description {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.isolated-price {
+  flex: 0 0 auto;
+  color: var(--red);
+  font-size: 18px;
+}
   .purchase-button,
   .secondary-button {
     display: inline-flex;

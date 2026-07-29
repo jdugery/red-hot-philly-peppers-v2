@@ -16,13 +16,24 @@ const peppers = defineCollection({
 
     image: z.string().optional(),
 
-    gallery: z.array(z.string()).default([]),
+    gallery: z
+      .array(
+        z.object({
+          image: z.string(),
+          caption: z.string().optional(),
+        }),
+      )
+      .default([]),
 
     available: z.boolean().default(false),
+
     seedPrice: z.number().positive().optional(),
     seedQuantity: z.string().optional(),
 
-    // Allows regular URLs, mailto links, or your current email instruction text
+    isolatedAvailable: z.boolean().default(false),
+    isolatedPrice: z.number().nonnegative().optional(),
+
+    // Supports normal URLs, mailto links, or plain purchase instructions.
     purchaseUrl: z.string().optional(),
 
     flavor: z.string().optional(),

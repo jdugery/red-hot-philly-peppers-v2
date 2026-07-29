@@ -12,6 +12,7 @@ gallery:
     caption: SRSP starting to ripen
   - image: /images/IMG_4142-1.jpeg
     caption: Great view of an unripe fruit
+
 available: true
 seedPrice: 5
 seedQuantity: 15+
