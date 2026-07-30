@@ -1,0 +1,109 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+
+const featuredTomatoes = [
+  {
+    name: "Red Currant",
+    slug: "red-currant",
+    type: "Currant Tomato",
+    description: "Tiny, intensely sweet tomatoes that produce in massive clusters.",
+  },
+  {
+    name: "San Marzano",
+    slug: "san-marzano",
+    type: "Paste Tomato",
+    description: "Classic Italian heirloom prized for sauces and canning.",
+  },
+  {
+    name: "Roma",
+    slug: "roma",
+    type: "Roma",
+    description: "Medium size, egg shaped tomato renowned for its sauce.",
+  },
+];
+---
+
+<MainLayout title="Red Hot Philly Peppers">
+  <section class="hero">
+    <div class="hero-content">
+      <p class="eyebrow">Grown in the Philadelphia area</p>
+
+      <h1>Exceptional tomatoes.<br />Grown with care.</h1>
+
+      <p class="hero-description">
+        Heirloom, cherry, paste, and specialty tomato varieties selected for
+        exceptional flavor, productivity, and appearance.
+      </p>
+
+      <div class="hero-actions">
+        <a class="button primary" href="#varieties">Explore varieties</a>
+        <a class="button secondary" href="#about">Our story</a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="image-placeholder">
+        <span>Featured tomato photo</span>
+        <small>We will add your picture here</small>
+      </div>
+    </div>
+  </section>
+
+  <section class="intro" id="about">
+    <p class="eyebrow">Small farm. Quality tomatoes.</p>
+
+    <h2>Flavor-first tomatoes grown locally.</h2>
+
+    <p>
+      Red Hot Philly Peppers grows a carefully selected collection of heirloom,
+      cherry, currant, and specialty tomatoes in the Philadelphia area,
+      focusing on outstanding flavor and unique varieties.
+    </p>
+  </section>
+
+  <section class="varieties" id="varieties">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Featured collection</p>
+        <h2>Tomato varieties</h2>
+      </div>
+
+      <a href="/tomatoes">View all varieties →</a>
+    </div>
+
+    <div class="pepper-grid">
+      {
+        featuredTomatoes.map((tomato) => (
+          <article class="pepper-card">
+            <div class="card-image">Photo coming soon</div>
+
+            <div class="card-content">
+              <p class="heat">{tomato.type}</p>
+              <h3>{tomato.name}</h3>
+              <p>{tomato.description}</p>
+
+              <a href={`/tomatoes/${tomato.slug}`}>
+                View variety →
+              </a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <p class="eyebrow">Stay connected</p>
+
+    <h2>Follow the growing season.</h2>
+
+    <p>
+      See new tomato varieties, harvest photos, growing updates, and seed
+      availability throughout the season.
+    </p>
+
+    <a class="button light" href="mailto:hello@redhotphillypeppers.com">
+      Contact us
+    </a>
+  </section>
+</MainLayout>

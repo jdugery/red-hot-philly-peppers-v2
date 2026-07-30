@@ -1,0 +1,109 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+
+const featuredTobacco = [
+  {
+    name: "Havana 608",
+    slug: "havana-608",
+    type: "Cigar Tobacco",
+    description: "A Havana-type tobacco well suited for premium cigar wrappers and fillers.",
+  },
+  {
+    name: "Connecticut Broadleaf",
+    slug: "connecticut-broadleaf",
+    type: "Cigar Wrapper",
+    description: "A classic broadleaf tobacco prized for its rich, dark wrapper leaves.",
+  },
+  {
+    name: "Corojo 99",
+    slug: "corojo-99",
+    type: "Cigar Tobacco",
+    description: "A Cuban-style variety producing flavorful leaves for premium cigars.",
+  },
+];
+---
+
+<MainLayout title="Red Hot Philly Peppers">
+  <section class="hero">
+    <div class="hero-content">
+      <p class="eyebrow">Grown in the Philadelphia area</p>
+
+      <h1>Premium tobacco.<br />Grown with care.</h1>
+
+      <p class="hero-description">
+        Specialty cigar tobacco varieties selected for exceptional leaf quality,
+        flavor, and traditional cigar production.
+      </p>
+
+      <div class="hero-actions">
+        <a class="button primary" href="#varieties">Explore varieties</a>
+        <a class="button secondary" href="#about">Our story</a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="image-placeholder">
+        <span>Featured tobacco photo</span>
+        <small>We will add your picture here</small>
+      </div>
+    </div>
+  </section>
+
+  <section class="intro" id="about">
+    <p class="eyebrow">Small farm. Quality tobacco.</p>
+
+    <h2>Traditional cigar tobacco grown locally.</h2>
+
+    <p>
+      Red Hot Philly Peppers grows specialty cigar tobacco varieties in the
+      Philadelphia area, focusing on premium leaf quality for cigar making,
+      seed production, and preservation of classic varieties.
+    </p>
+  </section>
+
+  <section class="varieties" id="varieties">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Featured collection</p>
+        <h2>Tobacco varieties</h2>
+      </div>
+
+      <a href="/tobacco">View all varieties →</a>
+    </div>
+
+    <div class="pepper-grid">
+      {
+        featuredTobacco.map((tobacco) => (
+          <article class="pepper-card">
+            <div class="card-image">Photo coming soon</div>
+
+            <div class="card-content">
+              <p class="heat">{tobacco.type}</p>
+              <h3>{tobacco.name}</h3>
+              <p>{tobacco.description}</p>
+
+              <a href={`/tobacco/${tobacco.slug}`}>
+                View variety →
+              </a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <p class="eyebrow">Stay connected</p>
+
+    <h2>Follow the growing season.</h2>
+
+    <p>
+      Follow along as we grow, harvest, cure, and document our tobacco crop
+      throughout the season.
+    </p>
+
+    <a class="button light" href="mailto:hello@redhotphillypeppers.com">
+      Contact us
+    </a>
+  </section>
+</MainLayout>

@@ -59,7 +59,68 @@ const home = defineCollection({
   }),
 });
 
+const tomatoes = defineCollection({
+  loader: glob({
+    pattern: "**/*.{md,mdx}",
+    base: "./src/content/tomatoes",
+  }),
+  schema: z.object({
+    name: z.string(),
+    species: z.string(),
+    type: z.string(),
+    color: z.string(),
+    description: z.string(),
+    image: z.string().optional(),
+    gallery: z
+      .array(
+        z.object({
+          image: z.string(),
+          caption: z.string().optional(),
+        }),
+      )
+      .default([]),
+    available: z.boolean().default(false),
+    seedPrice: z.number().optional(),
+    seedQuantity: z.string().optional(),
+  }),
+});
+
+const tobacco = defineCollection({
+  loader: glob({
+    pattern: "**/*.{md,mdx}",
+    base: "./src/content/tobacco",
+  }),
+  schema: z.object({
+    name: z.string(),
+    species: z.string(),
+    type: z.string(),
+    description: z.string(),
+
+    image: z.string().optional(),
+
+    gallery: z
+      .array(
+        z.object({
+          image: z.string(),
+          caption: z.string().optional(),
+        }),
+      )
+      .default([]),
+
+    available: z.boolean().default(false),
+    seedPrice: z.number().optional(),
+    seedQuantity: z.string().optional(),
+
+    isolatedAvailable: z.boolean().default(false),
+    isolatedPrice: z.number().optional(),
+
+    purchaseUrl: z.string().optional(),
+  }),
+});
+
 export const collections = {
   peppers,
+  tomatoes,
+  tobacco,
   home,
 };
