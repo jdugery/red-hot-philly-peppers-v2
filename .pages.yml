@@ -83,3 +83,141 @@ content:
       - name: isolatedPrice
         label: Isolated Seed Upgrade Price
         type: number
+
+  - name: tomatoes
+    label: Tomato Varieties
+    type: collection
+    path: src/content/tomatoes
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+
+    fields:
+    - name: name
+      label: Name
+      type: string
+
+    - name: species
+      label: Species
+      type: string
+
+    - name: type
+      label: Type
+      type: string
+
+    - name: color
+      label: Color
+      type: string
+
+    - name: description
+      label: Description
+      type: text
+
+    - name: image
+      label: Main Image
+      type: image
+
+    - name: gallery
+      label: Gallery
+      type: object
+      list: true
+      fields:
+        - name: image
+          label: Image
+          type: image
+
+        - name: caption
+          label: Caption
+          type: string
+
+    - name: available
+      label: Seeds Available
+      type: boolean
+      default: false
+
+    - name: seedPrice
+      label: Seed Price
+      type: number
+
+    - name: seedQuantity
+      label: Seed Quantity
+      type: string
+
+    - name: isolatedAvailable
+      label: Isolated Seeds Available
+      type: boolean
+      default: false
+
+    - name: isolatedPrice
+      label: Isolated Seed Upgrade Price
+      type: number
+
+    - name: purchaseUrl
+      label: Purchase URL
+      type: string
+
+  - name: tobacco
+    label: Tobacco Varieties
+    type: collection
+    path: src/content/tobacco
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+
+    fields:
+    - name: name
+      label: Name
+      type: string
+
+    - name: species
+      label: Species
+      type: string
+
+    - name: type
+      label: Type
+      type: string
+
+    - name: description
+      label: Description
+      type: text
+
+    - name: image
+      label: Main Image
+      type: image
+
+    - name: gallery
+      label: Gallery
+      type: object
+      list: true
+      fields:
+        - name: image
+          label: Image
+          type: image
+
+        - name: caption
+          label: Caption
+          type: string
+
+    - name: available
+      label: Seeds Available
+      type: boolean
+      default: false
+
+    - name: seedPrice
+      label: Seed Price
+      type: number
+
+    - name: seedQuantity
+      label: Seed Quantity
+      type: string
+
+    - name: isolatedAvailable
+      label: Isolated Seeds Available
+      type: boolean
+      default: false
+
+    - name: isolatedPrice
+      label: Isolated Seed Upgrade Price
+      type: number
+
+    - name: purchaseUrl
+      label: Purchase URL
+      type: string
