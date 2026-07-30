@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import MainLayout from "../../layouts/MainLayout.astro";
+import SeedCard from "../../components/SeedCard.astro";
 
 export async function getStaticPaths() {
   const peppers = await getCollection("peppers");
@@ -135,103 +136,16 @@ const formattedPrice =
             )
           }
         </div>
-
-        <section class="seed-card">
-          <div class="seed-card-top">
-            <div>
-              <p class="seed-label">Seeds</p>
-              <h2>Grow {pepper.data.name}</h2>
-            </div>
-
-            <span
-              class:list={[
-                "availability-badge",
-                pepper.data.available ? "available" : "unavailable",
-              ]}
-            >
-              {pepper.data.available ? "Available" : "Unavailable"}
-            </span>
-          </div>
-
-          {
-            pepper.data.available ? (
-              <>
-                {(formattedPrice || pepper.data.seedQuantity) && (
-                  <div class="seed-details">
-                    {formattedPrice && (
-                      <strong class="seed-price">
-                        {formattedPrice}
-                      </strong>
-                    )}
-
-                    {pepper.data.seedQuantity && (
-                      <span class="seed-quantity">
-                        QTY: {pepper.data.seedQuantity}
-                       </span>
-                    )}
-                  </div>
-                )}
-
-                <p class="seed-note">
-                  Germination tested. Open pollinated unless otherwise noted.
-                </p>
-{
-  pepper.data.isolatedAvailable && (
-    <div class="isolated-option">
-      <div>
-        <strong class="isolated-title">
-          Isolated seeds available
-        </strong>
-
-        <span class="isolated-description">
-          Optional isolated-seed upgrade
-        </span>
-      </div>
-
-      {
-        typeof pepper.data.isolatedPrice === "number" && (
-          <strong class="isolated-price">
-            +${pepper.data.isolatedPrice.toFixed(2)}
-          </strong>
-        )
-      }
-    </div>
-  )
-}
-                {pepper.data.purchaseUrl ? (
-                  <a
-                    class="purchase-button"
-                    href={pepper.data.purchaseUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Purchase seeds
-                  </a>
-                ) : (
-                  <a
-                    class="purchase-button"
-                    href="mailto:johnny@redhotphillypeppers.com"
-                  >
-                    Purchase seeds
-                  </a>
-                )}
-              </>
-            ) : (
-              <>
-                <p class="seed-note">
-                  Seeds for this variety are not currently available.
-                </p>
-
-                <a
-                  class="secondary-button"
-                  href="mailto:johnny@redhotphillypeppers.com"
-                >
-                  Ask about future availability
-                </a>
-              </>
-            )
-          }
-        </section>
+<SeedCard
+  name={pepper.data.name}
+  available={pepper.data.available}
+  seedPrice={pepper.data.seedPrice}
+  seedQuantity={pepper.data.seedQuantity}
+  isolatedAvailable={pepper.data.isolatedAvailable}
+  isolatedPrice={pepper.data.isolatedPrice}
+  purchaseUrl={pepper.data.purchaseUrl}
+/>
+        
       </div>
     </section>
 
@@ -403,14 +317,7 @@ const formattedPrice =
   }
 
   .pepper-label,
-  .seed-label {
-    margin: 0 0 10px;
-    color: var(--red);
-    font-size: 12px;
-    font-weight: 850;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-  }
+ 
 
   .details-column h1 {
     max-width: 720px;
@@ -455,145 +362,9 @@ const formattedPrice =
     text-align: right;
   }
 
-  .seed-card {
-    margin-top: 22px;
-    padding: 24px;
-    border: 1px solid rgba(41, 76, 50, 0.22);
-    border-radius: 16px;
-    background:
-      linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.78),
-        rgba(236, 230, 213, 0.88)
-      );
-    box-shadow: 0 14px 35px rgba(50, 40, 25, 0.08);
-  }
+  
 
-  .seed-card-top {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    align-items: flex-start;
-  }
-
-  .seed-card h2 {
-    margin: 0;
-    font-size: 25px;
-    line-height: 1.15;
-    letter-spacing: -0.025em;
-  }
-
-  .availability-badge {
-    flex: 0 0 auto;
-    padding: 7px 10px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 800;
-  }
-
-  .availability-badge.available {
-    color: #225334;
-    background: #dcebdc;
-  }
-
-  .availability-badge.unavailable {
-    color: #6c6254;
-    background: #e7e0d3;
-  }
-
-  .seed-details {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    margin-top: 22px;
-  }
-
-  .seed-price {
-    color: var(--red);
-    font-size: 30px;
-    line-height: 1;
-  }
-
-  .seed-quantity {
-    color: var(--muted);
-    font-size: 14px;
-  }
-
-  .seed-note {
-    margin: 16px 0 20px;
-    color: var(--muted);
-    font-size: 15px;
-    line-height: 1.55;
-  }
-.isolated-option {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 18px;
-  margin: 0 0 20px;
-  padding: 14px 16px;
-  border: 1px solid rgba(41, 76, 50, 0.2);
-  border-radius: 10px;
-  background: rgba(41, 76, 50, 0.07);
-}
-
-.isolated-option > div {
-  display: grid;
-  gap: 3px;
-}
-
-.isolated-title {
-  color: var(--text);
-  font-size: 15px;
-}
-
-.isolated-description {
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.isolated-price {
-  flex: 0 0 auto;
-  color: var(--red);
-  font-size: 18px;
-}
-  .purchase-button,
-  .secondary-button {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    min-height: 50px;
-    padding: 0 20px;
-    border-radius: 10px;
-    font-weight: 800;
-    text-align: center;
-    text-decoration: none;
-    box-sizing: border-box;
-    transition:
-      transform 150ms ease,
-      background 150ms ease;
-  }
-
-  .purchase-button {
-    color: white;
-    background: var(--red);
-  }
-
-  .purchase-button:hover {
-    transform: translateY(-2px);
-    filter: brightness(0.94);
-  }
-
-  .secondary-button {
-    color: var(--red);
-    border: 1px solid var(--red);
-    background: transparent;
-  }
-
-  .secondary-button:hover {
-    background: rgba(163, 45, 38, 0.06);
-  }
+  
 
   .body-content {
     max-width: 760px;
@@ -653,13 +424,8 @@ const formattedPrice =
       max-width: 62%;
     }
 
-    .seed-card-top {
-      display: block;
-    }
+  
 
-    .availability-badge {
-      display: inline-block;
-      margin-top: 14px;
-    }
+   
   }
 </style>

@@ -1,0 +1,173 @@
+---
+import { getCollection } from "astro:content";
+import MainLayout from "../../layouts/MainLayout.astro";
+import SeedCard from "../../components/SeedCard.astro";
+
+export async function getStaticPaths() {
+  const tomatoEntries = await getCollection("tomatoes");
+
+  return tomatoEntries.map((entry) => ({
+    params: { id: entry.id },
+    props: { tomato: entry },
+  }));
+}
+
+const { tomato } = Astro.props;
+---
+
+<MainLayout title={tomato.data.name}>
+  <main class="tomato-page">
+    <section class="tomato-hero">
+      <div class="tomato-image-wrap">
+        {
+          tomato.data.image ? (
+            <img
+              src={tomato.data.image}
+              alt={tomato.data.name}
+              class="main-tomato-image"
+            />
+          ) : (
+            <div class="image-placeholder">Photo coming soon</div>
+          )
+        }
+      </div>
+
+      <div class="tomato-info">
+        <p class="tomato-label">Tomato Variety</p>
+
+        <h1>{tomato.data.name}</h1>
+
+        <div class="tomato-details">
+          <p><strong>Species:</strong> {tomato.data.species}</p>
+          <p><strong>Type:</strong> {tomato.data.type}</p>
+          <p><strong>Color:</strong> {tomato.data.color}</p>
+        </div>
+
+        <p class="description">
+          {tomato.data.description}
+        </p>
+
+        <SeedCard
+          name={tomato.data.name}
+          available={tomato.data.available}
+          seedPrice={tomato.data.seedPrice}
+          seedQuantity={tomato.data.seedQuantity}
+          isolatedAvailable={tomato.data.isolatedAvailable}
+          isolatedPrice={tomato.data.isolatedPrice}
+          purchaseUrl={tomato.data.purchaseUrl}
+        />
+      </div>
+    </section>
+
+    {
+      tomato.data.gallery.length > 0 && (
+        <section class="gallery-section">
+          <h2>Gallery</h2>
+
+          <div class="gallery-grid">
+            {tomato.data.gallery.map((item) => (
+              <figure>
+                <img
+                  src={item.image}
+                  alt={item.caption || tomato.data.name}
+                />
+                {item.caption && <figcaption>{item.caption}</figcaption>}
+              </figure>
+            ))}
+          </div>
+        </section>
+      )
+    }
+  </main>
+</MainLayout>
+
+<style>
+.tomato-page{
+  max-width:1100px;
+  margin:auto;
+  padding:4rem 1.5rem;
+}
+
+.tomato-hero{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:3rem;
+  align-items:start;
+}
+
+.main-tomato-image{
+  width:100%;
+  display:block;
+  border-radius:18px;
+}
+
+.image-placeholder{
+  min-height:400px;
+  display:grid;
+  place-items:center;
+  background:#eee6d8;
+  border-radius:18px;
+}
+
+.tomato-label{
+  text-transform:uppercase;
+  letter-spacing:.15em;
+  font-size:.8rem;
+}
+
+.tomato-info h1{
+  margin:.5rem 0 1.5rem;
+  font-size:clamp(2.5rem,6vw,4.5rem);
+}
+
+.tomato-details{
+  margin-bottom:1.5rem;
+}
+
+.tomato-details p{
+  margin:.45rem 0;
+}
+
+.description{
+  font-size:1.1rem;
+  line-height:1.7;
+  margin-bottom:2rem;
+}
+
+.gallery-section{
+  margin-top:5rem;
+}
+
+.gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1.25rem;
+}
+
+.gallery-grid img{
+  width:100%;
+  display:block;
+  border-radius:16px;
+}
+
+figure{
+  margin:0;
+}
+
+figcaption{
+  margin-top:.5rem;
+  font-size:.9rem;
+}
+
+@media(max-width:800px){
+
+.tomato-hero{
+  grid-template-columns:1fr;
+}
+
+.gallery-grid{
+  grid-template-columns:1fr;
+}
+
+}
+</style>

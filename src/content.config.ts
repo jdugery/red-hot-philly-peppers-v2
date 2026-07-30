@@ -64,13 +64,16 @@ const tomatoes = defineCollection({
     pattern: "**/*.{md,mdx}",
     base: "./src/content/tomatoes",
   }),
+
   schema: z.object({
     name: z.string(),
     species: z.string(),
     type: z.string(),
     color: z.string(),
     description: z.string(),
+
     image: z.string().optional(),
+
     gallery: z
       .array(
         z.object({
@@ -79,9 +82,15 @@ const tomatoes = defineCollection({
         }),
       )
       .default([]),
+
     available: z.boolean().default(false),
     seedPrice: z.number().optional(),
     seedQuantity: z.string().optional(),
+
+    isolatedAvailable: z.boolean().default(false),
+    isolatedPrice: z.number().optional(),
+
+    purchaseUrl: z.string().optional(),
   }),
 });
 

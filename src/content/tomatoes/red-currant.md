@@ -11,4 +11,5 @@ seedPrice: 3
 seedQuantity: 25+
 isolatedAvailable: true
 isolatedPrice: 3
+purchaseUrl: "mailto:johnny@redhotphillypeppers.com?subject=Red%20Currant%20Tomato%20Seeds"
 ---
