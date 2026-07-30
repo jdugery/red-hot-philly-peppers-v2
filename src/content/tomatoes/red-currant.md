@@ -3,7 +3,8 @@ name: Red Currant
 species: Solanum pimpinellifolium
 type: Currant tomato
 color: Red
-description: Tiny, intensely sweet tomatoes produced in large clusters.
+description: Marble sized sweet tomatoes produced in large clusters. Perfect for
+  snacking on, adding to salads, etc.
 available: true
 seedPrice: 3
 seedQuantity: 25+
