@@ -1,103 +1,402 @@
 ---
+import { getCollection } from "astro:content";
 import MainLayout from "../../layouts/MainLayout.astro";
-const featuredPeppers = [
-  {
-    name: "Sugar Rush Stripey",
-    slug: "sugar-rush-stripey",
-    heat: "25,000–50,000 SHU",
-    description: "Sweet, tropical flavor with striking striped fruit.",
-  },
-  {
-    name: "7 Pot Primo",
-    slug: "7-pot-primo",
-    heat: "1,000,000+ SHU",
-    description: "An extremely hot pepper with a distinctive pointed tail.",
-  },
-  {
-    name: "Rezha Macedonian",
-    slug: "rezha-macedonian",
-    heat: "Mild–Medium",
-    description: "A rare heirloom pepper known for its deeply textured skin.",
-  },
-];
+
+const peppers = await getCollection("peppers");
+
+const sortedPeppers = [...peppers].sort((a, b) =>
+  a.data.name.localeCompare(b.data.name),
+);
+
+/*
+Converts heat text such as "25,000–50,000 SHU" into a percentage.
+
+The scale is logarithmic because pepper heat ranges from nearly zero
+to more than 2,000,000 SHU.
+*/
+function getHeatPercentage(heat: string | undefined) {
+  if (!heat) return 0;
+
+  const numbers = heat.match(/[\d,]+/g);
+  if (!numbers?.length) return 0;
+
+  const shu = Math.max(
+    ...numbers.map((n) => Number(n.replaceAll(",", ""))),
+  );
+
+  if (shu <= 500) return 5;
+  if (shu <= 2500) return 10;
+  if (shu <= 5000) return 18;
+  if (shu <= 15000) return 28;
+  if (shu <= 30000) return 35;
+  if (shu <= 50000) return 42;
+  if (shu <= 100000) return 52;
+  if (shu <= 250000) return 65;
+  if (shu <= 500000) return 78;
+  if (shu <= 1000000) return 90;
+
+  return 100;
+}
 ---
 
-<MainLayout title="Red Hot Philly Peppers">
-  <section class="hero">
-    <div class="hero-content">
-      <p class="eyebrow">Grown in the Philadelphia area</p>
-
-      <h1>Distinctive peppers.<br />Grown with purpose.</h1>
-
-      <p class="hero-description">
-        Specialty, heirloom, and superhot pepper varieties selected for
-        exceptional flavor, appearance, and heat.
+<MainLayout title="Pepper Varieties | Red Hot Philly Peppers">
+  <main class="catalog-page">
+    <header class="catalog-header">
+      <p class="breadcrumb">
+        <a href="/">Home</a>
+        <span>/</span>
+        Peppers
       </p>
 
-      <div class="hero-actions">
-        <a class="button primary" href="#varieties">Explore varieties</a>
-        <a class="button secondary" href="#about">Our story</a>
-      </div>
-    </div>
+      <h1>Pepper Varieties</h1>
 
-    <div class="hero-visual">
-      <div class="image-placeholder">
-        <span>Featured pepper photo</span>
-        <small>We will add your picture here</small>
-      </div>
-    </div>
-  </section>
+      <p class="catalog-description">
+        Browse our collection of specialty, heirloom, and superhot peppers
+        grown in the Philadelphia area.
+      </p>
+    </header>
 
-  <section class="intro" id="about">
-    <p class="eyebrow">Small farm. Serious peppers.</p>
+    {
+      sortedPeppers.length > 0 ? (
+        <section class="variety-grid" aria-label="Pepper varieties">
+          {sortedPeppers.map((pepper) => {
+            const heatPercentage = getHeatPercentage(pepper.data.heat);
 
-    <h2>Uncommon varieties grown locally.</h2>
+            return (
+              <article class="variety-card">
+                <a
+                  class="image-link"
+                  href={`/peppers/${pepper.id}`}
+                  aria-label={`View ${pepper.data.name}`}
+                >
+                  {pepper.data.image ? (
+                    <img
+                      src={pepper.data.image}
+                      alt={`${pepper.data.name} pepper`}
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div class="image-placeholder">
+                      <span>Photo coming soon</span>
+                    </div>
+                  )}
+                </a>
 
-    <p>
-      Red Hot Philly Peppers is a small specialty pepper farm serving the
-      Philadelphia area. We grow everything from productive heirlooms to some
-      of the hottest peppers in the world.
-    </p>
-  </section>
+                <div class="pepper-card-content">
+                  <div class="card-heading">
+                    <h2>
+                      <a href={`/peppers/${pepper.id}`}>
+                        {pepper.data.name}
+                      </a>
+                    </h2>
 
-  <section class="varieties" id="varieties">
-    <div class="section-heading">
-      <div>
-        <p class="eyebrow">Featured collection</p>
-        <h2>Pepper varieties</h2>
-      </div>
+                    {pepper.data.available && (
+                      <span class="availability">Seeds available</span>
+                    )}
+                  </div>
 
-      <a href="/peppers">View all varieties →</a>
-    </div>
+                  <p class="species">{pepper.data.species}</p>
 
-    <div class="pepper-grid">
-      {
-        featuredPeppers.map((pepper) => (
-          <article class="pepper-card">
-            <div class="card-image">Photo coming soon</div>
+                  <div class="heat-section">
+                    <div class="heat-heading">
+                      <span>Heat</span>
+                      <strong>{pepper.data.heat}</strong>
+                    </div>
 
-            <div class="card-content">
-              <p class="heat">{pepper.heat}</p>
-              <h3>{pepper.name}</h3>
-              <p>{pepper.description}</p>
-<a href={`/peppers/${pepper.slug}`}>View variety →</a>            </div>
-          </article>
-        ))
-      }
-    </div>
-  </section>
+                    <div
+                      class="heat-track"
+                      role="meter"
+                      aria-label={`${pepper.data.name} heat level`}
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                      aria-valuenow={Math.round(heatPercentage)}
+                    >
+                      <span
+                        class="heat-fill"
+                        style={`width: ${heatPercentage}%`}
+                      />
+                    </div>
+                  </div>
 
-  <section class="contact" id="contact">
-    <p class="eyebrow">Stay connected</p>
-    <h2>Follow the growing season.</h2>
+                  <p class="pepper-description">
+                    {pepper.data.description}
+                  </p>
 
-    <p>
-      New varieties, harvest photos, growing updates, and availability will be
-      posted here.
-    </p>
-
-    <a class="button light" href="mailto:hello@redhotphillypeppers.com">
-      Contact us
-    </a>
-  </section>
+                  <a class="view-link" href={`/peppers/${pepper.id}`}>
+                    View variety →
+                  </a>
+                </div>
+              </article>
+            );
+          })}
+        </section>
+      ) : (
+        <p class="empty-message">Pepper varieties are coming soon.</p>
+      )
+    }
+  </main>
 </MainLayout>
+
+<style>
+  .catalog-page {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 54px 0 110px;
+  }
+
+  .catalog-header {
+    max-width: 760px;
+    margin-bottom: 44px;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 38px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .breadcrumb a {
+    color: var(--black);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--red);
+  }
+
+  .catalog-header h1 {
+    margin: 0;
+    font-size: clamp(52px, 8vw, 92px);
+    line-height: 0.95;
+    letter-spacing: -0.055em;
+  }
+
+  .catalog-description {
+    max-width: 680px;
+    margin: 24px 0 0;
+    color: var(--muted);
+    font-size: 20px;
+    line-height: 1.65;
+  }
+
+  .variety-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    padding-top: 34px;
+    border-top: 1px solid var(--border);
+  }
+
+ .variety-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.52);
+  box-shadow: 0 12px 32px rgba(50, 40, 25, 0.06);
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+  .variety-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px rgba(50, 40, 25, 0.1);
+  }
+
+  .image-link {
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: #e8e2d4;
+  }
+
+  .image-link img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 220ms ease;
+  }
+
+  .variety-card:hover .image-link img {
+    transform: scale(1.025);
+  }
+
+  .image-placeholder {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    place-items: center;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  /*
+  Unique class name prevents MainLayout's global .card-content rules
+  from creating the large blank space.
+  */
+  .pepper-card-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 22px;
+}
+
+  .card-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .card-heading h2 {
+  margin: 0;
+  font-size: 23px;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+
+  /* Reserve space for two lines */
+  min-height: 2.24em;
+}
+
+  .card-heading h2 a {
+    color: var(--black);
+    text-decoration: none;
+  }
+
+  .card-heading h2 a:hover {
+    color: var(--red);
+  }
+
+  .availability {
+    flex: 0 0 auto;
+    padding: 6px 8px;
+    border-radius: 999px;
+    color: #225334;
+    background: #dcebdc;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .species {
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+    font-style: italic;
+  }
+
+  .heat-section {
+    margin-top: 20px;
+  }
+
+  .heat-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .heat-heading span {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .heat-heading strong {
+    color: var(--red);
+    font-size: 13px;
+    font-weight: 850;
+    text-align: right;
+  }
+
+  .heat-track {
+    width: 100%;
+    height: 8px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(181, 43, 43, 0.12);
+  }
+
+  .heat-fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(
+      90deg,
+      #e4a33c 0%,
+      var(--red-light) 55%,
+      var(--red-dark) 100%
+    );
+  }
+
+  .pepper-description {
+    margin: 18px 0 20px;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+.view-link {
+  margin-top: auto;
+  color: var(--red);
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+  .view-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .empty-message {
+    padding-top: 34px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  @media (max-width: 900px) {
+    .variety-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 620px) {
+    .catalog-page {
+      width: min(100% - 28px, 1180px);
+      padding-top: 34px;
+    }
+
+    .catalog-header {
+      margin-bottom: 32px;
+    }
+
+    .breadcrumb {
+      margin-bottom: 28px;
+    }
+
+    .catalog-header h1 {
+      font-size: clamp(48px, 16vw, 68px);
+    }
+
+    .catalog-description {
+      font-size: 18px;
+    }
+
+    .variety-grid {
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+  }
+</style>

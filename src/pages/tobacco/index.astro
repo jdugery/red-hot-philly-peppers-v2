@@ -1,109 +1,309 @@
 ---
+import { getCollection } from "astro:content";
 import MainLayout from "../../layouts/MainLayout.astro";
 
-const featuredTobacco = [
-  {
-    name: "Havana 608",
-    slug: "havana-608",
-    type: "Cigar Tobacco",
-    description: "A Havana-type tobacco well suited for premium cigar wrappers and fillers.",
-  },
-  {
-    name: "Connecticut Broadleaf",
-    slug: "connecticut-broadleaf",
-    type: "Cigar Wrapper",
-    description: "A classic broadleaf tobacco prized for its rich, dark wrapper leaves.",
-  },
-  {
-    name: "Corojo 99",
-    slug: "corojo-99",
-    type: "Cigar Tobacco",
-    description: "A Cuban-style variety producing flavorful leaves for premium cigars.",
-  },
-];
+const tobaccoVarieties = await getCollection("tobacco");
+
+const sortedTobacco = [...tobaccoVarieties].sort((a, b) =>
+  a.data.name.localeCompare(b.data.name),
+);
 ---
 
-<MainLayout title="Red Hot Philly Peppers">
-  <section class="hero">
-    <div class="hero-content">
-      <p class="eyebrow">Grown in the Philadelphia area</p>
-
-      <h1>Premium tobacco.<br />Grown with care.</h1>
-
-      <p class="hero-description">
-        Specialty cigar tobacco varieties selected for exceptional leaf quality,
-        flavor, and traditional cigar production.
+<MainLayout title="Tobacco Varieties | Red Hot Philly Peppers">
+  <main class="catalog-page">
+    <header class="catalog-header">
+      <p class="breadcrumb">
+        <a href="/">Home</a>
+        <span>/</span>
+        Tobacco
       </p>
 
-      <div class="hero-actions">
-        <a class="button primary" href="#varieties">Explore varieties</a>
-        <a class="button secondary" href="#about">Our story</a>
-      </div>
-    </div>
 
-    <div class="hero-visual">
-      <div class="image-placeholder">
-        <span>Featured tobacco photo</span>
-        <small>We will add your picture here</small>
-      </div>
-    </div>
-  </section>
+      <h1>Tobacco Varieties</h1>
 
-  <section class="intro" id="about">
-    <p class="eyebrow">Small farm. Quality tobacco.</p>
+      <p class="catalog-description">
+        Browse our collection of specialty cigar tobacco varieties grown in
+        the Philadelphia area.
+      </p>
+    </header>
 
-    <h2>Traditional cigar tobacco grown locally.</h2>
-
-    <p>
-      Red Hot Philly Peppers grows specialty cigar tobacco varieties in the
-      Philadelphia area, focusing on premium leaf quality for cigar making,
-      seed production, and preservation of classic varieties.
-    </p>
-  </section>
-
-  <section class="varieties" id="varieties">
-    <div class="section-heading">
-      <div>
-        <p class="eyebrow">Featured collection</p>
-        <h2>Tobacco varieties</h2>
-      </div>
-
-      <a href="/tobacco">View all varieties →</a>
-    </div>
-
-    <div class="pepper-grid">
-      {
-        featuredTobacco.map((tobacco) => (
-          <article class="pepper-card">
-            <div class="card-image">Photo coming soon</div>
-
-            <div class="card-content">
-              <p class="heat">{tobacco.type}</p>
-              <h3>{tobacco.name}</h3>
-              <p>{tobacco.description}</p>
-
-              <a href={`/tobacco/${tobacco.slug}`}>
-                View variety →
+    {
+      sortedTobacco.length > 0 ? (
+        <section class="variety-grid" aria-label="Tobacco varieties">
+          {sortedTobacco.map((tobacco) => (
+            <article class="variety-card">
+              <a
+                class="image-link"
+                href={`/tobacco/${tobacco.id}`}
+                aria-label={`View ${tobacco.data.name}`}
+              >
+                {tobacco.data.image ? (
+                  <img
+                    src={tobacco.data.image}
+                    alt={`${tobacco.data.name} tobacco plant`}
+                    loading="lazy"
+                  />
+                ) : (
+                  <div class="image-placeholder">
+                    <span>Photo coming soon</span>
+                  </div>
+                )}
               </a>
-            </div>
-          </article>
-        ))
-      }
-    </div>
-  </section>
 
-  <section class="contact" id="contact">
-    <p class="eyebrow">Stay connected</p>
+              <div class="card-content">
+                <div class="card-heading">
+                  <h2>
+                    <a href={`/tobacco/${tobacco.id}`}>
+                      {tobacco.data.name}
+                    </a>
+                  </h2>
 
-    <h2>Follow the growing season.</h2>
+                  {tobacco.data.available && (
+                    <span class="availability">Seeds available</span>
+                  )}
+                </div>
 
-    <p>
-      Follow along as we grow, harvest, cure, and document our tobacco crop
-      throughout the season.
-    </p>
+                {tobacco.data.species && (
+                  <p class="species">{tobacco.data.species}</p>
+                )}
 
-    <a class="button light" href="mailto:hello@redhotphillypeppers.com">
-      Contact us
-    </a>
-  </section>
+                {tobacco.data.type && (
+                  <p class="type">{tobacco.data.type}</p>
+                )}
+
+                <p class="description">
+                  {tobacco.data.description}
+                </p>
+
+                <a class="view-link" href={`/tobacco/${tobacco.id}`}>
+                  View variety →
+                </a>
+              </div>
+            </article>
+          ))}
+        </section>
+      ) : (
+        <p class="empty-message">Tobacco varieties are coming soon.</p>
+      )
+    }
+  </main>
 </MainLayout>
+
+<style>
+  .catalog-page {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 54px 0 110px;
+  }
+
+  .catalog-header {
+    max-width: 760px;
+    margin-bottom: 44px;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 38px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .breadcrumb a {
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--red);
+  }
+
+  .eyebrow {
+    margin: 0 0 14px;
+    color: var(--red);
+    font-size: 12px;
+    font-weight: 850;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .catalog-header h1 {
+    margin: 0;
+    font-size: clamp(52px, 8vw, 92px);
+    line-height: 0.95;
+    letter-spacing: -0.055em;
+  }
+
+  .catalog-description {
+    max-width: 680px;
+    margin: 24px 0 0;
+    color: var(--muted);
+    font-size: 20px;
+    line-height: 1.65;
+  }
+
+  .variety-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    padding-top: 34px;
+    border-top: 1px solid var(--border);
+  }
+
+  .variety-card {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.52);
+    box-shadow: 0 12px 32px rgba(50, 40, 25, 0.06);
+    transition:
+      transform 160ms ease,
+      box-shadow 160ms ease;
+  }
+
+  .variety-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px rgba(50, 40, 25, 0.1);
+  }
+
+  .image-link {
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: #e8e2d4;
+  }
+
+  .image-link img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 220ms ease;
+  }
+
+  .variety-card:hover .image-link img {
+    transform: scale(1.025);
+  }
+
+  .image-placeholder {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    place-items: center;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .card-content {
+    padding: 22px;
+  }
+
+  .card-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .card-heading h2 {
+    margin: 0;
+    font-size: 23px;
+    line-height: 1.12;
+    letter-spacing: -0.025em;
+  }
+
+  .card-heading h2 a {
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .card-heading h2 a:hover {
+    color: var(--red);
+  }
+
+  .availability {
+    flex: 0 0 auto;
+    padding: 6px 8px;
+    border-radius: 999px;
+    color: #225334;
+    background: #dcebdc;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .species {
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+    font-style: italic;
+  }
+
+  .type {
+    margin: 15px 0 0;
+    color: var(--red);
+    font-size: 14px;
+    font-weight: 800;
+  }
+
+  .description {
+    margin: 14px 0 20px;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .view-link {
+    color: var(--red);
+    font-size: 14px;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .view-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .empty-message {
+    padding-top: 34px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  @media (max-width: 900px) {
+    .variety-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 620px) {
+    .catalog-page {
+      width: min(100% - 28px, 1180px);
+      padding-top: 34px;
+    }
+
+    .catalog-header {
+      margin-bottom: 32px;
+    }
+
+    .breadcrumb {
+      margin-bottom: 28px;
+    }
+
+    .catalog-header h1 {
+      font-size: clamp(48px, 16vw, 68px);
+    }
+
+    .catalog-description {
+      font-size: 18px;
+    }
+
+    .variety-grid {
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+  }
+</style>
