@@ -8,8 +8,7 @@ const { title = "Red Hot Philly Peppers" } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
 
-    <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
     <meta
       name="description"
@@ -24,7 +23,7 @@ const { title = "Red Hot Philly Peppers" } = Astro.props;
      <a class="logo" href="/">
   <img
     class="logo-mark"
-    src="/apple-touch-icon.png"
+  src="/images/logo.png"
     alt="Red Hot Philly Peppers logo"
   />
 
@@ -140,14 +139,12 @@ const { title = "Red Hot Philly Peppers" } = Astro.props;
 }
 
 .logo-mark {
-  width: 62px;
-  height: 62px;
+  width: 72px;
+  height: 72px;
   display: block;
   flex-shrink: 0;
-  border-radius: 50%;
-  border: 2px solid rgba(181, 43, 43, 0.18);
   object-fit: cover;
-  box-shadow: 0 8px 22px rgba(134, 29, 29, 0.18);
+  border-radius: 50%;
 }
 
 .logo-text {
