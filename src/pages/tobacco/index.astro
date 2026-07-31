@@ -18,7 +18,6 @@ const sortedTobacco = [...tobaccoVarieties].sort((a, b) =>
         Tobacco
       </p>
 
-
       <h1>Tobacco Varieties</h1>
 
       <p class="catalog-description">
@@ -52,24 +51,23 @@ const sortedTobacco = [...tobaccoVarieties].sort((a, b) =>
 
               <div class="card-content">
                 <div class="card-heading">
-                  <h2>
-                    <a href={`/tobacco/${tobacco.id}`}>
-                      {tobacco.data.name}
-                    </a>
-                  </h2>
+                  <div class="title-group">
+                    <h2>
+                      <a href={`/tobacco/${tobacco.id}`}>
+                        {tobacco.data.name}
+                      </a>
+                    </h2>
+
+                    <p class="meta">
+                      {tobacco.data.species}
+                      {tobacco.data.type && ` • ${tobacco.data.type}`}
+                    </p>
+                  </div>
 
                   {tobacco.data.available && (
                     <span class="availability">Seeds available</span>
                   )}
                 </div>
-
-                {tobacco.data.species && (
-                  <p class="species">{tobacco.data.species}</p>
-                )}
-
-                {tobacco.data.type && (
-                  <p class="type">{tobacco.data.type}</p>
-                )}
 
                 <p class="description">
                   {tobacco.data.description}
@@ -119,15 +117,6 @@ const sortedTobacco = [...tobaccoVarieties].sort((a, b) =>
     color: var(--red);
   }
 
-  .eyebrow {
-    margin: 0 0 14px;
-    color: var(--red);
-    font-size: 12px;
-    font-weight: 850;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-  }
-
   .catalog-header h1 {
     margin: 0;
     font-size: clamp(52px, 8vw, 92px);
@@ -146,6 +135,7 @@ const sortedTobacco = [...tobaccoVarieties].sort((a, b) =>
   .variety-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
     gap: 24px;
     padding-top: 34px;
     border-top: 1px solid var(--border);
@@ -206,6 +196,10 @@ const sortedTobacco = [...tobaccoVarieties].sort((a, b) =>
     gap: 14px;
   }
 
+  .title-group {
+    min-width: 0;
+  }
+
   .card-heading h2 {
     margin: 0;
     font-size: 23px;
@@ -222,6 +216,14 @@ const sortedTobacco = [...tobaccoVarieties].sort((a, b) =>
     color: var(--red);
   }
 
+  .meta {
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+    font-style: italic;
+    line-height: 1.4;
+  }
+
   .availability {
     flex: 0 0 auto;
     padding: 6px 8px;
@@ -234,22 +236,8 @@ const sortedTobacco = [...tobaccoVarieties].sort((a, b) =>
     letter-spacing: 0.05em;
   }
 
-  .species {
-    margin: 10px 0 0;
-    color: var(--muted);
-    font-size: 14px;
-    font-style: italic;
-  }
-
-  .type {
-    margin: 15px 0 0;
-    color: var(--red);
-    font-size: 14px;
-    font-weight: 800;
-  }
-
   .description {
-    margin: 14px 0 20px;
+    margin: 18px 0 20px;
     color: var(--muted);
     font-size: 15px;
     line-height: 1.6;
