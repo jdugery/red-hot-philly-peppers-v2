@@ -31,19 +31,13 @@ const allImages = [
     (item) => item.image !== pepper.data.image,
   ),
 ];
-
-const formattedPrice =
-  typeof pepper.data.seedPrice === "number"
-    ? new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(pepper.data.seedPrice)
-    : null;
 ---
 
 <MainLayout title={`${pepper.data.name} | Red Hot Philly Peppers`}>
   <main class="pepper-page">
-    <a class="back-link" href="/peppers">← All pepper varieties</a>
+    <a class="back-link" href="/peppers">
+      ← All pepper varieties
+    </a>
 
     <section class="pepper-hero">
       <div class="image-column">
@@ -136,16 +130,18 @@ const formattedPrice =
             )
           }
         </div>
-<SeedCard
-  name={pepper.data.name}
-  available={pepper.data.available}
-  seedPrice={pepper.data.seedPrice}
-  seedQuantity={pepper.data.seedQuantity}
-  isolatedAvailable={pepper.data.isolatedAvailable}
-  isolatedPrice={pepper.data.isolatedPrice}
-  purchaseUrl={pepper.data.purchaseUrl}
-/>
-        
+
+        <div class="seed-card-wrap">
+          <SeedCard
+            name={pepper.data.name}
+            available={pepper.data.available}
+            seedPrice={pepper.data.seedPrice}
+            seedQuantity={pepper.data.seedQuantity}
+            isolatedAvailable={pepper.data.isolatedAvailable}
+            isolatedPrice={pepper.data.isolatedPrice}
+            purchaseUrl={pepper.data.purchaseUrl}
+          />
+        </div>
       </div>
     </section>
 
@@ -316,8 +312,14 @@ const formattedPrice =
     padding-top: 6px;
   }
 
-  .pepper-label,
- 
+  .pepper-label {
+    margin: 0 0 10px;
+    color: var(--red);
+    font-size: 12px;
+    font-weight: 850;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
 
   .details-column h1 {
     max-width: 720px;
@@ -362,9 +364,9 @@ const formattedPrice =
     text-align: right;
   }
 
-  
-
-  
+  .seed-card-wrap {
+    margin-top: 22px;
+  }
 
   .body-content {
     max-width: 760px;
@@ -423,9 +425,5 @@ const formattedPrice =
     .fact-row strong {
       max-width: 62%;
     }
-
-  
-
-   
   }
 </style>
