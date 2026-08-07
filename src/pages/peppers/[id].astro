@@ -46,15 +46,16 @@ const allImages = [
             <>
               <figure class="main-image-figure">
                 <div class="detail-image">
-                  <img
-                    id="main-pepper-image"
-                    src={allImages[0].image}
-                    alt={
-                      allImages[0].caption ||
-                      `${pepper.data.name} pepper`
-                    }
-                  />
-                </div>
+  <img
+    id="main-pepper-image"
+    class="clickable-main-image"
+    src={allImages[0].image}
+    alt={
+      allImages[0].caption ||
+      `${pepper.data.name} pepper`
+    }
+  />
+</div>
 
                 <figcaption
                   id="image-caption"
@@ -150,7 +151,63 @@ const allImages = [
     </section>
   </main>
 </MainLayout>
+<div id="image-lightbox" class="image-lightbox">
+  <button
+    id="lightbox-close"
+    class="lightbox-close"
+    type="button"
+    aria-label="Close image"
+  >
+    ×
+  </button>
 
+  <img id="lightbox-image" src="" alt="" />
+</div>
+
+<script>
+  const mainImage = document.getElementById("main-pepper-image");
+  const lightbox = document.getElementById("image-lightbox");
+  const lightboxImage = document.getElementById("lightbox-image");
+  const closeButton = document.getElementById("lightbox-close");
+
+  function openLightbox() {
+    if (
+      !(mainImage instanceof HTMLImageElement) ||
+      !(lightbox instanceof HTMLElement) ||
+      !(lightboxImage instanceof HTMLImageElement)
+    ) {
+      return;
+    }
+
+    lightboxImage.src = mainImage.src;
+    lightboxImage.alt = mainImage.alt;
+
+    lightbox.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeLightbox() {
+    if (!(lightbox instanceof HTMLElement)) return;
+
+    lightbox.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  mainImage?.addEventListener("click", openLightbox);
+  closeButton?.addEventListener("click", closeLightbox);
+
+  lightbox?.addEventListener("click", (event) => {
+    if (event.target === lightbox) {
+      closeLightbox();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeLightbox();
+    }
+  });
+</script>
 <script>
   const mainImage = document.querySelector(
     "#main-pepper-image",
@@ -426,4 +483,51 @@ const allImages = [
       max-width: 62%;
     }
   }
+  .clickable-main-image {
+  cursor: zoom-in;
+}
+
+.image-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: none;
+  align-items: center;
+  justify-content: center;
+
+  padding: 30px;
+
+  background: rgba(0, 0, 0, 0.92);
+}
+
+.image-lightbox.open {
+  display: flex;
+}
+
+.image-lightbox img {
+  max-width: 95vw;
+  max-height: 92vh;
+
+  width: auto;
+  height: auto;
+
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+
+  border: none;
+  background: transparent;
+  color: white;
+
+  font-size: 42px;
+  line-height: 1;
+
+  cursor: pointer;
+}
 </style>
