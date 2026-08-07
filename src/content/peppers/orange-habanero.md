@@ -17,7 +17,7 @@ gallery:
   - image: /images/IMG_4771.jpeg
     caption: The final product
 available: true
-seedPrice: 2
+seedPrice: 5
 seedQuantity: 10+
 isolatedAvailable: false
 ---
