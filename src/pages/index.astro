@@ -5,7 +5,10 @@ import MainLayout from "../layouts/MainLayout.astro";
 const homeEntries = await getCollection("home");
 const home = homeEntries[0].data;
 
-const peppers = await getCollection("peppers");
+const peppers = await getCollection(
+  "peppers",
+  ({ data }) => data.showOnWebsite,
+);
 
 const featuredPeppers = [...peppers]
   .filter((pepper) => pepper.data.image)
@@ -38,6 +41,12 @@ const featuredPeppers = [...peppers]
           alt="Red Hot Philly Peppers"
         />
       </div>
+    </section>
+
+    <section class="home-about" id="about">
+      <p class="eyebrow">About the garden</p>
+      <h2>{home.aboutTitle}</h2>
+      <p>{home.aboutText}</p>
     </section>
 
     {
@@ -237,6 +246,29 @@ const featuredPeppers = [...peppers]
     border-top: 1px solid var(--border);
   }
 
+  .home-about {
+    padding: 88px max(20px, calc((100% - 900px) / 2));
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: rgba(255, 250, 247, 0.48);
+    text-align: center;
+  }
+
+  .home-about h2 {
+    margin: 0;
+    font-size: clamp(42px, 5vw, 66px);
+    line-height: 0.98;
+    letter-spacing: -0.05em;
+  }
+
+  .home-about > p:last-child {
+    max-width: 760px;
+    margin: 24px auto 0;
+    color: var(--muted);
+    font-size: 19px;
+    line-height: 1.7;
+  }
+
   .section-heading {
     margin-bottom: 28px;
     display: flex;
@@ -383,6 +415,11 @@ const featuredPeppers = [...peppers]
     .home-contact {
       align-items: flex-start;
       flex-direction: column;
+    }
+
+    .home-about {
+      padding-top: 70px;
+      padding-bottom: 70px;
     }
   }
 
