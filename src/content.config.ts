@@ -25,6 +25,7 @@ const peppers = defineCollection({
       )
       .default([]),
 
+    showOnWebsite: z.boolean().default(true),
     available: z.boolean().default(false),
 
     seedPrice: z.number().positive().optional(),
@@ -83,6 +84,7 @@ const tomatoes = defineCollection({
       )
       .default([]),
 
+    showOnWebsite: z.boolean().default(true),
     available: z.boolean().default(false),
     seedPrice: z.number().optional(),
     seedQuantity: z.string().optional(),
@@ -116,6 +118,7 @@ const tobacco = defineCollection({
       )
       .default([]),
 
+    showOnWebsite: z.boolean().default(true),
     available: z.boolean().default(false),
     seedPrice: z.number().optional(),
     seedQuantity: z.string().optional(),

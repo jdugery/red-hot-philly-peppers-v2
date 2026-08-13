@@ -4,7 +4,10 @@ import MainLayout from "../../layouts/MainLayout.astro";
 import SeedCard from "../../components/SeedCard.astro";
 
 export async function getStaticPaths() {
-  const peppers = await getCollection("peppers");
+  const peppers = await getCollection(
+    "peppers",
+    ({ data }) => data.showOnWebsite,
+  );
 
   return peppers.map((pepper) => ({
     params: { id: pepper.id },

@@ -2,7 +2,10 @@
 import { getCollection } from "astro:content";
 import MainLayout from "../../layouts/MainLayout.astro";
 
-const tobaccoVarieties = await getCollection("tobacco");
+const tobaccoVarieties = await getCollection(
+  "tobacco",
+  ({ data }) => data.showOnWebsite,
+);
 
 const sortedTobacco = [...tobaccoVarieties].sort((a, b) =>
   a.data.name.localeCompare(b.data.name),

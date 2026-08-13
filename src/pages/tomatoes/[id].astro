@@ -4,7 +4,10 @@ import MainLayout from "../../layouts/MainLayout.astro";
 import SeedCard from "../../components/SeedCard.astro";
 
 export async function getStaticPaths() {
-  const tomatoes = await getCollection("tomatoes");
+  const tomatoes = await getCollection(
+    "tomatoes",
+    ({ data }) => data.showOnWebsite,
+  );
 
   return tomatoes.map((tomato) => ({
     params: { id: tomato.id },

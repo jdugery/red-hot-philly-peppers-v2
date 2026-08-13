@@ -2,7 +2,10 @@
 import { getCollection } from "astro:content";
 import MainLayout from "../../layouts/MainLayout.astro";
 
-const peppers = await getCollection("peppers");
+const peppers = await getCollection(
+  "peppers",
+  ({ data }) => data.showOnWebsite,
+);
 
 const sortedPeppers = [...peppers].sort((a, b) =>
   a.data.name.localeCompare(b.data.name),

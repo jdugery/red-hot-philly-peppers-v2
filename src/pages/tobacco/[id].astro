@@ -3,7 +3,10 @@ import { getCollection, render } from "astro:content";
 import MainLayout from "../../layouts/MainLayout.astro";
 
 export async function getStaticPaths() {
-  const tobacco = await getCollection("tobacco");
+  const tobacco = await getCollection(
+    "tobacco",
+    ({ data }) => data.showOnWebsite,
+  );
 
   return tobacco.map((tobacco) => ({
     params: { id: tobacco.id },
