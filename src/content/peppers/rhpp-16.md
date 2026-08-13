@@ -7,5 +7,6 @@ description: "A RHPP exclusive. Large red cayenne like variety. Exhibits
   corking, strong Anthocyanin production. Heat TBD. "
 image: /images/IMG_1104.png
 available: false
+showOnWebsite: false
 isolatedAvailable: false
 ---
