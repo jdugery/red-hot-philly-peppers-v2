@@ -16,7 +16,7 @@ gallery:
     caption: More immature green pods
   - image: /images/IMG_4771.jpeg
     caption: The final product
-available: false
+available: true
 seedPrice: 5
 seedQuantity: 10+
 isolatedAvailable: false
