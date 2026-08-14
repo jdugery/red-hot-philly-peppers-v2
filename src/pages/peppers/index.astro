@@ -11,6 +11,25 @@ const sortedPeppers = [...peppers].sort((a, b) =>
   a.data.name.localeCompare(b.data.name),
 );
 
+const speciesOptions = [
+  ...new Set(sortedPeppers.map((pepper) => pepper.data.species).filter(Boolean)),
+].sort();
+
+function getMaxShu(heat: string | undefined) {
+  if (!heat) return 0;
+  const numbers = heat.match(/[\d,]+/g);
+  if (!numbers?.length) return 0;
+  return Math.max(...numbers.map((number) => Number(number.replaceAll(",", ""))));
+}
+
+function getHeatBand(heat: string | undefined) {
+  const shu = getMaxShu(heat);
+  if (shu <= 2500) return "mild";
+  if (shu <= 50000) return "medium";
+  if (shu <= 350000) return "hot";
+  return "superhot";
+}
+
 /*
 Converts heat text such as "25,000–50,000 SHU" into a percentage.
 
@@ -18,14 +37,7 @@ The scale is logarithmic because pepper heat ranges from nearly zero
 to more than 2,000,000 SHU.
 */
 function getHeatPercentage(heat: string | undefined) {
-  if (!heat) return 0;
-
-  const numbers = heat.match(/[\d,]+/g);
-  if (!numbers?.length) return 0;
-
-  const shu = Math.max(
-    ...numbers.map((n) => Number(n.replaceAll(",", ""))),
-  );
+  const shu = getMaxShu(heat);
 
   if (shu <= 500) return 5;
   if (shu <= 2500) return 10;
@@ -56,12 +68,45 @@ function getHeatPercentage(heat: string | undefined) {
 
     {
       sortedPeppers.length > 0 ? (
-        <section class="variety-grid" aria-label="Pepper varieties">
+        <>
+          <section class="catalog-filters" aria-label="Filter pepper varieties">
+            <div class="filter-field">
+              <label for="heat-filter">Heat level</label>
+              <select id="heat-filter">
+                <option value="all">All heat levels</option>
+                <option value="mild">Mild · 0–2,500 SHU</option>
+                <option value="medium">Medium · 2,501–50,000 SHU</option>
+                <option value="hot">Hot · 50,001–350,000 SHU</option>
+                <option value="superhot">Superhot · 350,000+ SHU</option>
+              </select>
+            </div>
+
+            <div class="filter-field">
+              <label for="species-filter">Species</label>
+              <select id="species-filter">
+                <option value="all">All species</option>
+                {speciesOptions.map((species) => (
+                  <option value={species}>{species}</option>
+                ))}
+              </select>
+            </div>
+
+            <button id="reset-filters" type="button">Reset filters</button>
+            <p id="filter-count" aria-live="polite">
+              Showing {sortedPeppers.length} {sortedPeppers.length === 1 ? "variety" : "varieties"}
+            </p>
+          </section>
+
+          <section class="variety-grid" aria-label="Pepper varieties">
           {sortedPeppers.map((pepper) => {
             const heatPercentage = getHeatPercentage(pepper.data.heat);
 
             return (
-              <article class="variety-card">
+              <article
+                class="variety-card"
+                data-heat-band={getHeatBand(pepper.data.heat)}
+                data-species={pepper.data.species}
+              >
                 <a
                   class="image-link"
                   href={`/peppers/${pepper.id}`}
@@ -116,10 +161,6 @@ function getHeatPercentage(heat: string | undefined) {
                     </div>
                   </div>
 
-                  <p class="pepper-description">
-                    {pepper.data.description}
-                  </p>
-
                   <a class="view-link" href={`/peppers/${pepper.id}`}>
                     View variety →
                   </a>
@@ -127,13 +168,53 @@ function getHeatPercentage(heat: string | undefined) {
               </article>
             );
           })}
-        </section>
+          </section>
+          <p id="no-filter-results" class="no-filter-results" hidden>
+            No varieties match those filters.
+          </p>
+        </>
       ) : (
         <p class="empty-message">Pepper varieties are coming soon.</p>
       )
     }
   </main>
 </MainLayout>
+
+<script>
+  const heatFilter = document.querySelector<HTMLSelectElement>("#heat-filter");
+  const speciesFilter = document.querySelector<HTMLSelectElement>("#species-filter");
+  const resetButton = document.querySelector<HTMLButtonElement>("#reset-filters");
+  const countLabel = document.querySelector<HTMLElement>("#filter-count");
+  const noResults = document.querySelector<HTMLElement>("#no-filter-results");
+  const varietyCards = [...document.querySelectorAll<HTMLElement>(".variety-card")];
+
+  function applyFilters() {
+    const selectedHeat = heatFilter?.value ?? "all";
+    const selectedSpecies = speciesFilter?.value ?? "all";
+    let visibleCount = 0;
+
+    varietyCards.forEach((card) => {
+      const matchesHeat = selectedHeat === "all" || card.dataset.heatBand === selectedHeat;
+      const matchesSpecies = selectedSpecies === "all" || card.dataset.species === selectedSpecies;
+      const isVisible = matchesHeat && matchesSpecies;
+      card.hidden = !isVisible;
+      if (isVisible) visibleCount += 1;
+    });
+
+    if (countLabel) {
+      countLabel.textContent = `Showing ${visibleCount} ${visibleCount === 1 ? "variety" : "varieties"}`;
+    }
+    if (noResults) noResults.hidden = visibleCount !== 0;
+  }
+
+  heatFilter?.addEventListener("change", applyFilters);
+  speciesFilter?.addEventListener("change", applyFilters);
+  resetButton?.addEventListener("click", () => {
+    if (heatFilter) heatFilter.value = "all";
+    if (speciesFilter) speciesFilter.value = "all";
+    applyFilters();
+  });
+</script>
 
 <style>
   .catalog-page {
@@ -180,6 +261,59 @@ function getHeatPercentage(heat: string | undefined) {
     line-height: 1.65;
   }
 
+  .catalog-filters {
+    margin-bottom: 26px;
+    padding: 18px;
+    display: flex;
+    align-items: end;
+    gap: 14px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.42);
+  }
+
+  .filter-field {
+    min-width: 190px;
+    display: grid;
+    gap: 7px;
+  }
+
+  .filter-field label {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .filter-field select,
+  #reset-filters {
+    min-height: 44px;
+    padding: 0 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--white);
+    color: var(--black);
+    font: inherit;
+    font-size: 14px;
+  }
+
+  #reset-filters {
+    cursor: pointer;
+    color: var(--red-dark);
+    font-weight: 800;
+  }
+
+  #filter-count {
+    margin: 0 0 12px auto;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .no-filter-results {
+    margin: 32px 0 0;
+    color: var(--muted);
+    font-size: 17px;
+  }
+
   .variety-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -201,6 +335,10 @@ function getHeatPercentage(heat: string | undefined) {
     transform 160ms ease,
     box-shadow 160ms ease;
 }
+
+  .variety-card[hidden] {
+    display: none;
+  }
 
   .variety-card:hover {
     transform: translateY(-4px);
@@ -341,15 +479,8 @@ function getHeatPercentage(heat: string | undefined) {
     );
   }
 
-  .pepper-description {
-    margin: 18px 0 20px;
-    color: var(--muted);
-    font-size: 15px;
-    line-height: 1.6;
-  }
-
 .view-link {
-  margin-top: auto;
+  margin-top: 24px;
   color: var(--red);
   font-size: 14px;
   font-weight: 800;
@@ -398,6 +529,19 @@ function getHeatPercentage(heat: string | undefined) {
     .variety-grid {
       grid-template-columns: 1fr;
       gap: 18px;
+    }
+
+    .catalog-filters {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .filter-field {
+      min-width: 0;
+    }
+
+    #filter-count {
+      margin: 4px 0 0;
     }
   }
 </style>
