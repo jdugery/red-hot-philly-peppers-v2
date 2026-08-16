@@ -142,7 +142,11 @@ function getHeatPercentage(heat: string | undefined) {
 
                   <div class="heat-section">
                     <div class="heat-heading">
-                      <span>Heat</span>
+                      <span>
+                        <b class={`heat-band heat-band-${getHeatBand(pepper.data.heat)}`}>
+                          {getHeatBand(pepper.data.heat).replace("-", " ")}
+                        </b>
+                      </span>
                       <strong>{pepper.data.heat}</strong>
                     </div>
 
@@ -451,6 +455,28 @@ function getHeatPercentage(heat: string | undefined) {
     letter-spacing: 0.1em;
     text-transform: uppercase;
   }
+
+  .heat-heading span:first-child {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .heat-band {
+    padding: 4px 7px;
+    border-radius: 999px;
+    background: var(--red-pale);
+    color: var(--red-dark);
+    font-size: 9px;
+    font-weight: 850;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .heat-band-mild { background: #e2edda; color: #365b2b; }
+  .heat-band-medium { background: #f3e7c7; color: #735515; }
+  .heat-band-hot { background: #f2d4c7; color: #8a321d; }
+  .heat-band-superhot { background: #edd0d0; color: #7f1d1d; }
 
   .heat-heading strong {
     color: var(--red);
