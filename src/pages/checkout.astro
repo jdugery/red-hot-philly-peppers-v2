@@ -1,8 +1,13 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
+import { env } from "cloudflare:workers";
 
-const squareApplicationId = "sandbox-sq0idb-EzZP9_8QHEGrWN12H5FRPg";
-const squareLocationId = "LR809HXY3TYB8";
+export const prerender = false;
+
+const production = env.SQUARE_ENV === "production";
+const squareApplicationId = production ? "sq0idp-h660eM3KEKiKuZXXHJzM0A" : "sandbox-sq0idb-EzZP9_8QHEGrWN12H5FRPg";
+const squareLocationId = production ? "L53B3P55TJJ5M" : "LR809HXY3TYB8";
+const squareSdkUrl = production ? "https://web.squarecdn.com/v1/square.js" : "https://sandbox.web.squarecdn.com/v1/square.js";
 ---
 
 <MainLayout title="Checkout | Red Hot Philly Peppers">
@@ -10,10 +15,11 @@ const squareLocationId = "LR809HXY3TYB8";
     class="checkout-page"
     data-square-application-id={squareApplicationId}
     data-square-location-id={squareLocationId}
+    data-square-environment={production ? "production" : "sandbox"}
   >
     <div class="checkout-heading">
       <a href="/peppers">← Continue shopping</a>
-      <span>Square Sandbox · Test orders only</span>
+      <span>{production ? "Secure checkout powered by Square" : "Square Sandbox · Test orders only"}</span>
       <h1>Checkout</h1>
       <p>One secure checkout for all of your seed packets.</p>
     </div>
@@ -60,7 +66,7 @@ const squareLocationId = "LR809HXY3TYB8";
 
         <div id="checkout-message" class="checkout-message" role="status" hidden></div>
         <button id="place-order-button" class="place-order-button" type="submit" disabled>
-          Place test order
+          {production ? "Place order" : "Place test order"}
         </button>
       </form>
 
@@ -82,7 +88,7 @@ const squareLocationId = "LR809HXY3TYB8";
   </main>
 </MainLayout>
 
-<script is:inline src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
+<script is:inline src={squareSdkUrl}></script>
 <script is:inline type="module" src="/scripts/checkout.js"></script>
 
 <style>

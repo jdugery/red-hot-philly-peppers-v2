@@ -4,7 +4,8 @@ import { env } from "cloudflare:workers";
 
 export const prerender = false;
 
-const LOCATION_ID = "LR809HXY3TYB8";
+const SANDBOX_LOCATION_ID = "LR809HXY3TYB8";
+const PRODUCTION_LOCATION_ID = "L53B3P55TJJ5M";
 const SHIPPING_CENTS = 400;
 const SQUARE_VERSION = "2026-07-15";
 const COLLECTIONS = ["peppers", "tomatoes", "tobacco"] as const;
@@ -27,8 +28,9 @@ function clean(value: unknown, max = 160) {
   return typeof value === "string" ? value.trim().slice(0, max) : "";
 }
 
-async function squareRequest(path: string, accessToken: string, body: unknown) {
-  const response = await fetch(`https://connect.squareupsandbox.com/v2${path}`, {
+async function squareRequest(path: string, accessToken: string, body: unknown, production: boolean) {
+  const host = production ? "https://connect.squareup.com" : "https://connect.squareupsandbox.com";
+  const response = await fetch(`${host}/v2${path}`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -47,8 +49,10 @@ async function squareRequest(path: string, accessToken: string, body: unknown) {
 
 export const POST: APIRoute = async ({ request }) => {
   try {
+    const production = env.SQUARE_ENV === "production";
+    const locationId = production ? PRODUCTION_LOCATION_ID : SANDBOX_LOCATION_ID;
     const accessToken = env.SQUARE_ACCESS_TOKEN;
-    if (!accessToken) return json({ error: "Square Sandbox has not been connected yet." }, 503);
+    if (!accessToken) return json({ error: `Square ${production ? "Production" : "Sandbox"} has not been connected yet.` }, 503);
 
     const input = await request.json() as Record<string, any>;
     const sourceId = clean(input.sourceId, 300);
@@ -92,7 +96,7 @@ export const POST: APIRoute = async ({ request }) => {
     const orderResult = await squareRequest("/orders", accessToken, {
       idempotency_key: idempotencyKey,
       order: {
-        location_id: LOCATION_ID,
+        location_id: locationId,
         line_items: lineItems,
         fulfillments: [{
           type: "SHIPMENT",
@@ -114,7 +118,7 @@ export const POST: APIRoute = async ({ request }) => {
           },
         }],
       },
-    });
+    }, production);
 
     const order = orderResult.order;
     const paymentResult = await squareRequest("/payments", accessToken, {
@@ -122,15 +126,15 @@ export const POST: APIRoute = async ({ request }) => {
       idempotency_key: crypto.randomUUID(),
       amount_money: order.total_money,
       order_id: order.id,
-      location_id: LOCATION_ID,
+      location_id: locationId,
       buyer_email_address: email,
       autocomplete: true,
-      note: "Red Hot Philly Peppers website Sandbox checkout",
-    });
+      note: `Red Hot Philly Peppers website ${production ? "production" : "Sandbox"} checkout`,
+    }, production);
 
     return json({ paymentId: paymentResult.payment.id, orderId: order.id, status: paymentResult.payment.status });
   } catch (error) {
-    console.error("Square Sandbox checkout failed", error);
+    console.error("Square checkout failed", error);
     return json({ error: error instanceof Error ? error.message : "The test order could not be completed." }, 500);
   }
 };

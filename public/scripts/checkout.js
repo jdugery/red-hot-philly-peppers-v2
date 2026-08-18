@@ -36,6 +36,7 @@ async function initialize() {
   const form = document.querySelector("#checkout-form");
   const button = document.querySelector("#place-order-button");
   if (!cartApi || !(checkoutPage instanceof HTMLElement) || !(form instanceof HTMLFormElement) || !(button instanceof HTMLButtonElement)) return;
+  const production = checkoutPage.dataset.squareEnvironment === "production";
 
   const cart = cartApi.read();
   renderSummary(cart, cartApi.money);
@@ -55,7 +56,7 @@ async function initialize() {
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
       button.disabled = true;
-      button.textContent = "Processing test order…";
+      button.textContent = production ? "Processing order…" : "Processing test order…";
       try {
         const tokenResult = await card.tokenize();
         if (tokenResult.status !== "OK") throw new Error(tokenResult.errors?.[0]?.message || "Card details could not be verified.");
@@ -70,12 +71,12 @@ async function initialize() {
         cartApi.write([]);
         renderSummary([], cartApi.money);
         form.reset();
-        showMessage(`Test order complete. Square payment ${result.paymentId} was approved in Sandbox.`, true);
-        button.textContent = "Test order complete";
+        showMessage(production ? `Order complete. Square payment ${result.paymentId} was approved.` : `Test order complete. Square payment ${result.paymentId} was approved in Sandbox.`, true);
+        button.textContent = production ? "Order complete" : "Test order complete";
       } catch (error) {
         showMessage(error instanceof Error ? error.message : "The test order could not be completed.");
         button.disabled = false;
-        button.textContent = "Place test order";
+        button.textContent = production ? "Place order" : "Place test order";
       }
     });
   } catch (error) {
