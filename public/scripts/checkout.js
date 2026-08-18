@@ -1,4 +1,19 @@
-const SHIPPING_CENTS = 400;
+const UNTRACKED_SHIPPING_CENTS = 195;
+const TRACKED_SHIPPING_CENTS = 495;
+const TRACKING_REQUIRED_AT_CENTS = 2500;
+
+function shippingFor(cart) {
+  const subtotalCents = Math.round(cart.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0) * 100);
+  const tracked = document.querySelector('input[name="shippingMethod"][value="tracked"]');
+  const untracked = document.querySelector('input[name="shippingMethod"][value="untracked"]');
+  if (subtotalCents >= TRACKING_REQUIRED_AT_CENTS && tracked instanceof HTMLInputElement && untracked instanceof HTMLInputElement) {
+    tracked.checked = true;
+    untracked.disabled = true;
+  } else if (untracked instanceof HTMLInputElement) {
+    untracked.disabled = false;
+  }
+  return tracked instanceof HTMLInputElement && tracked.checked ? TRACKED_SHIPPING_CENTS : UNTRACKED_SHIPPING_CENTS;
+}
 
 function showMessage(message, success = false) {
   const node = document.querySelector("#checkout-message");
@@ -27,7 +42,9 @@ function renderSummary(cart, money) {
   }
   const subtotal = cart.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
   document.querySelector("#checkout-subtotal").textContent = money(subtotal);
-  document.querySelector("#checkout-total").textContent = money(subtotal + SHIPPING_CENTS / 100);
+  const shippingCents = shippingFor(cart);
+  document.querySelector("#checkout-shipping").textContent = money(shippingCents / 100);
+  document.querySelector("#checkout-total").textContent = money(subtotal + shippingCents / 100);
 }
 
 async function initialize() {
@@ -40,6 +57,9 @@ async function initialize() {
 
   const cart = cartApi.read();
   renderSummary(cart, cartApi.money);
+  for (const option of document.querySelectorAll('input[name="shippingMethod"]')) {
+    option.addEventListener("change", () => renderSummary(cartApi.read(), cartApi.money));
+  }
   if (cart.length === 0) return;
 
   if (!window.Square) {

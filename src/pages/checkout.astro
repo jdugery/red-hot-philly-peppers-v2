@@ -57,6 +57,25 @@ const squareSdkUrl = production ? "https://web.squarecdn.com/v1/square.js" : "ht
         <section>
           <p class="section-number">03</p>
           <div>
+            <h2>Shipping method</h2>
+            <div class="shipping-options">
+              <label class="shipping-option">
+                <input type="radio" name="shippingMethod" value="untracked" checked />
+                <span><strong>USPS letter mail</strong><small>Untracked · best for small orders</small></span>
+                <b>$1.95</b>
+              </label>
+              <label class="shipping-option">
+                <input type="radio" name="shippingMethod" value="tracked" />
+                <span><strong>USPS tracked shipping</strong><small>Tracking included · required for orders $25+</small></span>
+                <b>$4.95</b>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <p class="section-number">04</p>
+          <div>
             <h2>Payment</h2>
             <p class="secure-note">Card details are securely handled by Square and never touch our server.</p>
             <div id="card-container" class="card-container"></div>
@@ -79,7 +98,7 @@ const squareSdkUrl = production ? "https://web.squarecdn.com/v1/square.js" : "ht
         </div>
         <div id="checkout-totals" class="checkout-totals">
           <div><span>Subtotal</span><strong id="checkout-subtotal">$0.00</strong></div>
-          <div><span>Seed packet shipping</span><strong>$4.00</strong></div>
+          <div><span>Shipping</span><strong id="checkout-shipping">$1.95</strong></div>
           <div><span>Tax</span><strong>Not enabled in Sandbox</strong></div>
           <div class="checkout-total"><span>Test total</span><strong id="checkout-total">$0.00</strong></div>
         </div>
@@ -110,6 +129,15 @@ const squareSdkUrl = production ? "https://web.squarecdn.com/v1/square.js" : "ht
   .checkout-form input { width: 100%; height: 48px; padding: 0 13px; border: 1px solid var(--border); border-radius: 9px; color: var(--text); background: rgba(255,255,255,.7); font: inherit; font-size: 15px; outline: none; }
   .checkout-form input:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(163,38,39,.1); }
   .secure-note { margin: -10px 0 16px; color: var(--muted); font-size: 13px; }
+  .shipping-options { display: grid; gap: 10px; }
+  .shipping-option { grid-template-columns: auto 1fr auto !important; align-items: center; gap: 14px !important; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: rgba(255,255,255,.6); cursor: pointer; }
+  .shipping-option:has(input:checked) { border-color: var(--red); box-shadow: 0 0 0 3px rgba(163,38,39,.08); }
+  .shipping-option input { width: 18px; height: 18px; padding: 0; accent-color: var(--red); }
+  .shipping-option span { display: grid; gap: 3px; color: var(--text); }
+  .shipping-option strong { font-size: 14px; }
+  .shipping-option small { color: var(--muted); font-size: 11px; font-weight: 500; }
+  .shipping-option b { color: var(--text); font-size: 14px; }
+  .shipping-option:has(input:disabled) { cursor: not-allowed; opacity: .55; }
   .card-container { min-height: 90px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: white; }
   .sandbox-help { margin: 12px 0 0; color: #795c24; font-size: 11px; line-height: 1.5; }
   .place-order-button { min-height: 54px; border: 0; border-radius: 10px; color: white; background: var(--red); cursor: pointer; font: inherit; font-weight: 850; }

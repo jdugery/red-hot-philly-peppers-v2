@@ -6,7 +6,9 @@ export const prerender = false;
 
 const SANDBOX_LOCATION_ID = "LR809HXY3TYB8";
 const PRODUCTION_LOCATION_ID = "L53B3P55TJJ5M";
-const SHIPPING_CENTS = 400;
+const UNTRACKED_SHIPPING_CENTS = 195;
+const TRACKED_SHIPPING_CENTS = 495;
+const TRACKING_REQUIRED_AT_CENTS = 2500;
 const SQUARE_VERSION = "2026-07-15";
 const COLLECTIONS = ["peppers", "tomatoes", "tobacco"] as const;
 
@@ -62,6 +64,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     const catalogs = Object.fromEntries(await Promise.all(COLLECTIONS.map(async (name) => [name, await getCollection(name)]))) as Record<CollectionName, Awaited<ReturnType<typeof getCollection>>>;
     const lineItems = [];
+    let subtotalCents = 0;
 
     for (const raw of rawCart) {
       const item = raw as CartInput;
@@ -73,6 +76,7 @@ export const POST: APIRoute = async ({ request }) => {
       if (!entry || !product?.available || typeof product.seedPrice !== "number") return json({ error: "A seed packet is no longer available." }, 409);
       const isolated = Boolean(item.isolated && product.isolatedAvailable && typeof product.isolatedPrice === "number");
       const unitPrice = product.seedPrice + (isolated ? product.isolatedPrice! : 0);
+      subtotalCents += Math.round(unitPrice * 100) * item.quantity;
       lineItems.push({
         name: `${product.name} — ${isolated ? "Isolated" : "Standard"} seed packet`,
         quantity: String(item.quantity),
@@ -80,7 +84,14 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    lineItems.push({ name: "Seed packet shipping", quantity: "1", base_price_money: { amount: SHIPPING_CENTS, currency: "USD" } });
+    const requestedShipping = clean(customer.shippingMethod, 20);
+    const tracked = subtotalCents >= TRACKING_REQUIRED_AT_CENTS || requestedShipping === "tracked";
+    const shippingCents = tracked ? TRACKED_SHIPPING_CENTS : UNTRACKED_SHIPPING_CENTS;
+    lineItems.push({
+      name: tracked ? "USPS tracked seed shipping" : "USPS untracked letter shipping",
+      quantity: "1",
+      base_price_money: { amount: shippingCents, currency: "USD" },
+    });
     const email = clean(customer.email, 254);
     const phone = clean(customer.phone, 30);
     const fullName = clean(customer.name);
