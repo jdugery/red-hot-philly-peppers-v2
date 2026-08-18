@@ -1,11 +1,26 @@
 const UNTRACKED_SHIPPING_CENTS = 195;
 const TRACKED_SHIPPING_CENTS = 495;
+const INTERNATIONAL_SHIPPING_CENTS = 749;
 const TRACKING_REQUIRED_AT_CENTS = 2500;
 
 function shippingFor(cart) {
   const subtotalCents = Math.round(cart.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0) * 100);
   const tracked = document.querySelector('input[name="shippingMethod"][value="tracked"]');
   const untracked = document.querySelector('input[name="shippingMethod"][value="untracked"]');
+  const international = document.querySelector('input[name="shippingMethod"][value="international"]');
+  const country = document.querySelector('input[name="country"]');
+  const countryCode = country instanceof HTMLInputElement ? country.value.trim().toUpperCase() : "US";
+  if (countryCode && countryCode !== "US" && international instanceof HTMLInputElement) {
+    international.disabled = false;
+    international.checked = true;
+    if (tracked instanceof HTMLInputElement) tracked.disabled = true;
+    if (untracked instanceof HTMLInputElement) untracked.disabled = true;
+    return INTERNATIONAL_SHIPPING_CENTS;
+  }
+  if (international instanceof HTMLInputElement) {
+    international.disabled = true;
+    if (international.checked && untracked instanceof HTMLInputElement) untracked.checked = true;
+  }
   if (subtotalCents >= TRACKING_REQUIRED_AT_CENTS && tracked instanceof HTMLInputElement && untracked instanceof HTMLInputElement) {
     tracked.checked = true;
     untracked.disabled = true;
@@ -16,9 +31,10 @@ function shippingFor(cart) {
 }
 
 function paTaxRate() {
+  const country = document.querySelector('input[name="country"]');
   const state = document.querySelector('input[name="state"]');
   const county = document.querySelector('input[name="county"]');
-  if (!(state instanceof HTMLInputElement) || state.value.trim().toUpperCase() !== "PA") return 0;
+  if (!(country instanceof HTMLInputElement) || country.value.trim().toUpperCase() !== "US" || !(state instanceof HTMLInputElement) || state.value.trim().toUpperCase() !== "PA") return 0;
   const normalizedCounty = county instanceof HTMLInputElement ? county.value.trim().toLowerCase().replace(/\s+county$/, "") : "";
   if (normalizedCounty === "philadelphia") return 8;
   if (normalizedCounty === "allegheny") return 7;
@@ -70,7 +86,7 @@ async function initialize() {
 
   const cart = cartApi.read();
   renderSummary(cart, cartApi.money);
-  for (const option of document.querySelectorAll('input[name="shippingMethod"], input[name="state"], input[name="county"]')) {
+  for (const option of document.querySelectorAll('input[name="shippingMethod"], input[name="country"], input[name="state"], input[name="county"]')) {
     option.addEventListener("change", () => renderSummary(cartApi.read(), cartApi.money));
     option.addEventListener("input", () => renderSummary(cartApi.read(), cartApi.money));
   }
