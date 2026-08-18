@@ -1,5 +1,16 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "red-hot-philly-peppers-v2",
-  "compatibility_date": "2026-08-17"
+  "compatibility_date": "2026-08-17",
+  "workers_dev": true,
+  "routes": [
+    {
+      "pattern": "redhotphillypeppers.com",
+      "custom_domain": true
+    },
+    {
+      "pattern": "www.redhotphillypeppers.com",
+      "custom_domain": true
+    }
+  ]
 }
