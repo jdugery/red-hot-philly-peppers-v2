@@ -80,7 +80,7 @@ const squareSdkUrl = production ? "https://web.squarecdn.com/v1/square.js" : "ht
             <h2>Payment</h2>
             <p class="secure-note">Card details are securely handled by Square and never touch our server.</p>
             <div id="card-container" class="card-container"></div>
-            <p class="sandbox-help">Sandbox test card: 4111 1111 1111 1111 · any future expiration · CVV 111 · ZIP 94103</p>
+            {!production && <p class="sandbox-help">Sandbox test card: 4111 1111 1111 1111 · any future expiration · CVV 111 · ZIP 94103</p>}
           </div>
         </section>
 
