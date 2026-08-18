@@ -15,6 +15,16 @@ function shippingFor(cart) {
   return tracked instanceof HTMLInputElement && tracked.checked ? TRACKED_SHIPPING_CENTS : UNTRACKED_SHIPPING_CENTS;
 }
 
+function paTaxRate() {
+  const state = document.querySelector('input[name="state"]');
+  const county = document.querySelector('input[name="county"]');
+  if (!(state instanceof HTMLInputElement) || state.value.trim().toUpperCase() !== "PA") return 0;
+  const normalizedCounty = county instanceof HTMLInputElement ? county.value.trim().toLowerCase().replace(/\s+county$/, "") : "";
+  if (normalizedCounty === "philadelphia") return 8;
+  if (normalizedCounty === "allegheny") return 7;
+  return 6;
+}
+
 function showMessage(message, success = false) {
   const node = document.querySelector("#checkout-message");
   if (!(node instanceof HTMLElement)) return;
@@ -41,10 +51,13 @@ function renderSummary(cart, money) {
     items.append(line);
   }
   const subtotal = cart.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
+  const subtotalCents = Math.round(subtotal * 100);
   document.querySelector("#checkout-subtotal").textContent = money(subtotal);
   const shippingCents = shippingFor(cart);
+  const taxCents = Math.round((subtotalCents + shippingCents) * paTaxRate() / 100);
   document.querySelector("#checkout-shipping").textContent = money(shippingCents / 100);
-  document.querySelector("#checkout-total").textContent = money(subtotal + shippingCents / 100);
+  document.querySelector("#checkout-tax").textContent = money(taxCents / 100);
+  document.querySelector("#checkout-total").textContent = money((subtotalCents + shippingCents + taxCents) / 100);
 }
 
 async function initialize() {
@@ -57,8 +70,9 @@ async function initialize() {
 
   const cart = cartApi.read();
   renderSummary(cart, cartApi.money);
-  for (const option of document.querySelectorAll('input[name="shippingMethod"]')) {
+  for (const option of document.querySelectorAll('input[name="shippingMethod"], input[name="state"], input[name="county"]')) {
     option.addEventListener("change", () => renderSummary(cartApi.read(), cartApi.money));
+    option.addEventListener("input", () => renderSummary(cartApi.read(), cartApi.money));
   }
   if (cart.length === 0) return;
 

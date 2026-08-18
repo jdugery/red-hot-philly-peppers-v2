@@ -98,10 +98,12 @@ export const POST: APIRoute = async ({ request }) => {
     const addressLine1 = clean(customer.addressLine1);
     const city = clean(customer.city);
     const state = clean(customer.state, 2).toUpperCase();
+    const county = clean(customer.county, 80).toLowerCase().replace(/\s+county$/, "");
     const postalCode = clean(customer.postalCode, 12);
-    if (!email || !phone || !fullName || !addressLine1 || !city || !/^[A-Z]{2}$/.test(state) || !postalCode) {
+    if (!email || !phone || !fullName || !addressLine1 || !city || !/^[A-Z]{2}$/.test(state) || !county || !postalCode) {
       return json({ error: "Please complete the contact and shipping address fields." }, 400);
     }
+    const taxPercentage = state === "PA" ? (county === "philadelphia" ? "8" : county === "allegheny" ? "7" : "6") : null;
 
     const idempotencyKey = crypto.randomUUID();
     const orderResult = await squareRequest("/orders", accessToken, {
@@ -109,6 +111,7 @@ export const POST: APIRoute = async ({ request }) => {
       order: {
         location_id: locationId,
         line_items: lineItems,
+        ...(taxPercentage ? { taxes: [{ name: "Pennsylvania sales tax", percentage: taxPercentage, scope: "ORDER" }] } : {}),
         fulfillments: [{
           type: "SHIPMENT",
           state: "PROPOSED",
