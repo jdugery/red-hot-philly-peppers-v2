@@ -2,6 +2,7 @@ const UNTRACKED_SHIPPING_CENTS = 195;
 const TRACKED_SHIPPING_CENTS = 495;
 const INTERNATIONAL_SHIPPING_CENTS = 749;
 const TRACKING_REQUIRED_AT_CENTS = 2500;
+const FREE_DOMESTIC_SHIPPING_AT_CENTS = 3000;
 
 function shippingFor(cart) {
   const subtotalCents = Math.round(cart.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0) * 100);
@@ -20,6 +21,15 @@ function shippingFor(cart) {
   if (international instanceof HTMLInputElement) {
     international.disabled = true;
     if (international.checked && untracked instanceof HTMLInputElement) untracked.checked = true;
+  }
+  if (tracked instanceof HTMLInputElement) tracked.disabled = false;
+  const trackedPrice = document.querySelector("#tracked-shipping-price");
+  if (trackedPrice instanceof HTMLElement) trackedPrice.textContent = subtotalCents >= FREE_DOMESTIC_SHIPPING_AT_CENTS ? "FREE" : "$4.95";
+  if (subtotalCents >= FREE_DOMESTIC_SHIPPING_AT_CENTS && tracked instanceof HTMLInputElement && untracked instanceof HTMLInputElement) {
+    tracked.checked = true;
+    tracked.disabled = false;
+    untracked.disabled = true;
+    return 0;
   }
   if (subtotalCents >= TRACKING_REQUIRED_AT_CENTS && tracked instanceof HTMLInputElement && untracked instanceof HTMLInputElement) {
     tracked.checked = true;
