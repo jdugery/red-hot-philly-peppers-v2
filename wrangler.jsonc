@@ -3,6 +3,9 @@
   "name": "red-hot-philly-peppers-v2",
   "compatibility_date": "2026-08-17",
   "workers_dev": true,
+  "vars": {
+    "SQUARE_ENV": "production"
+  },
   "routes": [
     {
       "pattern": "redhotphillypeppers.com",
