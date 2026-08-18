@@ -189,23 +189,18 @@ const formattedPrice =
     </div>
   )
 }
-                {tobacco.data.purchaseUrl ? (
-                  <a
-                    class="purchase-button"
-                    href={tobacco.data.purchaseUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Purchase seeds
-                  </a>
-                ) : (
-                  <a
-                    class="purchase-button"
-                    href="mailto:johnny@redhotphillypeppers.com"
-                  >
-                    Purchase seeds
-                  </a>
-                )}
+                <button
+                  class="purchase-button add-to-cart-button"
+                  type="button"
+                  data-product-id={tobacco.id}
+                  data-collection="tobacco"
+                  data-name={tobacco.data.name}
+                  data-price={tobacco.data.seedPrice}
+                  data-isolated-price={tobacco.data.isolatedPrice ?? 0}
+                  data-product-url={`/tobacco/${tobacco.id}`}
+                >
+                  Add to cart
+                </button>
               </>
             ) : (
               <>
@@ -567,6 +562,8 @@ const formattedPrice =
   }
 
   .purchase-button {
+    border: 0;
+    cursor: pointer;
     color: white;
     background: var(--red);
   }

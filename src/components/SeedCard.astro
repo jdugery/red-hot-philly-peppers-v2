@@ -1,5 +1,7 @@
 ---
 interface Props {
+  productId: string;
+  collection: "peppers" | "tomatoes" | "tobacco";
   name: string;
   available: boolean;
   seedPrice?: number;
@@ -10,13 +12,14 @@ interface Props {
 }
 
 const {
+  productId,
+  collection,
   name,
   available,
   seedPrice,
   seedQuantity,
   isolatedAvailable = false,
   isolatedPrice,
-  purchaseUrl,
 } = Astro.props;
 
 const formattedPrice =
@@ -27,8 +30,6 @@ const formattedPrice =
       }).format(seedPrice)
     : null;
 
-const purchaseLink =
-  purchaseUrl || "mailto:johnny@redhotphillypeppers.com";
 ---
 
 <section class="seed-card">
@@ -80,21 +81,26 @@ const purchaseLink =
             </div>
 
             {typeof isolatedPrice === "number" && (
-              <strong class="isolated-price">
-                +${isolatedPrice.toFixed(2)}
-              </strong>
+              <label class="isolated-choice">
+                <input class="isolated-checkbox" type="checkbox" />
+                <span>+${isolatedPrice.toFixed(2)}</span>
+              </label>
             )}
           </div>
         )}
 
-        <a
-          class="purchase-button"
-          href={purchaseLink}
-          target={purchaseUrl ? "_blank" : undefined}
-          rel={purchaseUrl ? "noopener noreferrer" : undefined}
+        <button
+          class="purchase-button add-to-cart-button"
+          type="button"
+          data-product-id={productId}
+          data-collection={collection}
+          data-name={name}
+          data-price={seedPrice}
+          data-isolated-price={isolatedPrice ?? 0}
+          data-product-url={`/${collection}/${productId}`}
         >
-          Purchase seeds
-        </a>
+          Add to cart
+        </button>
       </>
     ) : (
       <>
@@ -221,10 +227,21 @@ const purchaseLink =
     font-size: 13px;
   }
 
-  .isolated-price {
+  .isolated-choice {
     flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     color: var(--red);
+    cursor: pointer;
     font-size: 18px;
+    font-weight: 800;
+  }
+
+  .isolated-checkbox {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--red);
   }
 
   .purchase-button,
@@ -246,6 +263,8 @@ const purchaseLink =
   }
 
   .purchase-button {
+    border: 0;
+    cursor: pointer;
     color: white;
     background: var(--red);
   }

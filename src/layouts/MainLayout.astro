@@ -1,5 +1,15 @@
 ---
+import CartDrawer from "../components/CartDrawer.astro";
+
 const { title = "Red Hot Philly Peppers" } = Astro.props;
+const currentSection = Astro.url.pathname.split("/")[1];
+
+const navItems = [
+  { href: "/peppers", label: "Peppers", section: "peppers" },
+  { href: "/tomatoes", label: "Tomatoes", section: "tomatoes" },
+  { href: "/tobacco", label: "Tobacco", section: "tobacco" },
+  { href: "/about", label: "About", section: "about" },
+];
 ---
 
 <!doctype html>
@@ -22,11 +32,17 @@ const { title = "Red Hot Philly Peppers" } = Astro.props;
       </a>
 
       <nav aria-label="Main navigation">
-        <a href="/peppers">Peppers</a>
-        <a href="/tomatoes">Tomatoes</a>
-        <a href="/tobacco">Tobacco</a>
-        <a href="/about">About</a>
+        {navItems.map((item) => (
+          <a
+            href={item.href}
+            aria-current={currentSection === item.section ? "page" : undefined}
+          >
+            {item.label}
+          </a>
+        ))}
       </nav>
+
+      <CartDrawer />
     </header>
 
     <slot />
@@ -35,6 +51,7 @@ const { title = "Red Hot Philly Peppers" } = Astro.props;
       <p>© {new Date().getFullYear()} Red Hot Philly Peppers</p>
       <p>Philadelphia, Pennsylvania</p>
     </footer>
+    <script is:inline type="module" src="/scripts/cart.js"></script>
   </body>
 </html>
 
@@ -87,9 +104,10 @@ const { title = "Red Hot Philly Peppers" } = Astro.props;
   .logo img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; }
   .logo span { font-family: Georgia, serif; font-size: 24px; font-weight: 700; }
 
-  .site-header nav { display: flex; gap: 24px; font-size: 14px; font-weight: 700; }
+  .site-header nav { display: flex; gap: 20px; font-size: 14px; font-weight: 700; }
   .site-header nav a { padding: 8px 0; border-bottom: 1px solid transparent; }
   .site-header nav a:hover { border-color: rgba(255,255,255,.75); }
+  .site-header nav a[aria-current="page"] { border-color: white; }
 
   footer {
     padding: 28px max(20px, calc((100% - 1160px) / 2));
@@ -105,7 +123,7 @@ const { title = "Red Hot Philly Peppers" } = Astro.props;
   @media (max-width: 820px) {
     .site-header { padding: 10px 14px 14px; flex-wrap: wrap; }
     .site-header nav {
-      width: 100%;
+      width: calc(100% - 70px);
       padding-top: 10px;
       justify-content: center;
       flex-wrap: wrap;
