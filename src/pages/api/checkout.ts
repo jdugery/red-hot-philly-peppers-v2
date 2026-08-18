@@ -10,6 +10,7 @@ const UNTRACKED_SHIPPING_CENTS = 195;
 const TRACKED_SHIPPING_CENTS = 495;
 const INTERNATIONAL_SHIPPING_CENTS = 749;
 const TRACKING_REQUIRED_AT_CENTS = 2500;
+const FREE_DOMESTIC_SHIPPING_AT_CENTS = 3000;
 const SQUARE_VERSION = "2026-07-15";
 const COLLECTIONS = ["peppers", "tomatoes", "tobacco"] as const;
 
@@ -90,9 +91,10 @@ export const POST: APIRoute = async ({ request }) => {
     if (!/^[A-Z]{2}$/.test(country)) return json({ error: "Enter a valid two-letter country code, such as US, CA, or GB." }, 400);
     const international = country !== "US";
     const tracked = !international && (subtotalCents >= TRACKING_REQUIRED_AT_CENTS || requestedShipping === "tracked");
-    const shippingCents = international ? INTERNATIONAL_SHIPPING_CENTS : tracked ? TRACKED_SHIPPING_CENTS : UNTRACKED_SHIPPING_CENTS;
+    const freeDomesticShipping = !international && subtotalCents >= FREE_DOMESTIC_SHIPPING_AT_CENTS;
+    const shippingCents = international ? INTERNATIONAL_SHIPPING_CENTS : freeDomesticShipping ? 0 : tracked ? TRACKED_SHIPPING_CENTS : UNTRACKED_SHIPPING_CENTS;
     lineItems.push({
-      name: international ? "International seed shipping" : tracked ? "USPS tracked seed shipping" : "USPS untracked letter shipping",
+      name: international ? "International seed shipping" : freeDomesticShipping ? "Free USPS tracked seed shipping" : tracked ? "USPS tracked seed shipping" : "USPS untracked letter shipping",
       quantity: "1",
       base_price_money: { amount: shippingCents, currency: "USD" },
     });
