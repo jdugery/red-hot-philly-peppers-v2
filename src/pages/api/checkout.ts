@@ -8,6 +8,7 @@ const SANDBOX_LOCATION_ID = "LR809HXY3TYB8";
 const PRODUCTION_LOCATION_ID = "L53B3P55TJJ5M";
 const UNTRACKED_SHIPPING_CENTS = 195;
 const TRACKED_SHIPPING_CENTS = 495;
+const INTERNATIONAL_SHIPPING_CENTS = 749;
 const TRACKING_REQUIRED_AT_CENTS = 2500;
 const SQUARE_VERSION = "2026-07-15";
 const COLLECTIONS = ["peppers", "tomatoes", "tobacco"] as const;
@@ -85,10 +86,13 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const requestedShipping = clean(customer.shippingMethod, 20);
-    const tracked = subtotalCents >= TRACKING_REQUIRED_AT_CENTS || requestedShipping === "tracked";
-    const shippingCents = tracked ? TRACKED_SHIPPING_CENTS : UNTRACKED_SHIPPING_CENTS;
+    const country = clean(customer.country, 2).toUpperCase();
+    if (!/^[A-Z]{2}$/.test(country)) return json({ error: "Enter a valid two-letter country code, such as US, CA, or GB." }, 400);
+    const international = country !== "US";
+    const tracked = !international && (subtotalCents >= TRACKING_REQUIRED_AT_CENTS || requestedShipping === "tracked");
+    const shippingCents = international ? INTERNATIONAL_SHIPPING_CENTS : tracked ? TRACKED_SHIPPING_CENTS : UNTRACKED_SHIPPING_CENTS;
     lineItems.push({
-      name: tracked ? "USPS tracked seed shipping" : "USPS untracked letter shipping",
+      name: international ? "International seed shipping" : tracked ? "USPS tracked seed shipping" : "USPS untracked letter shipping",
       quantity: "1",
       base_price_money: { amount: shippingCents, currency: "USD" },
     });
@@ -97,13 +101,13 @@ export const POST: APIRoute = async ({ request }) => {
     const fullName = clean(customer.name);
     const addressLine1 = clean(customer.addressLine1);
     const city = clean(customer.city);
-    const state = clean(customer.state, 2).toUpperCase();
+    const state = clean(customer.state, 80).toUpperCase();
     const county = clean(customer.county, 80).toLowerCase().replace(/\s+county$/, "");
     const postalCode = clean(customer.postalCode, 12);
-    if (!email || !phone || !fullName || !addressLine1 || !city || !/^[A-Z]{2}$/.test(state) || !county || !postalCode) {
+    if (!email || !phone || !fullName || !addressLine1 || !city || !state || (country === "US" && state === "PA" && !county) || !postalCode) {
       return json({ error: "Please complete the contact and shipping address fields." }, 400);
     }
-    const taxPercentage = state === "PA" ? (county === "philadelphia" ? "8" : county === "allegheny" ? "7" : "6") : null;
+    const taxPercentage = country === "US" && state === "PA" ? (county === "philadelphia" ? "8" : county === "allegheny" ? "7" : "6") : null;
 
     const idempotencyKey = crypto.randomUUID();
     const orderResult = await squareRequest("/orders", accessToken, {
@@ -126,7 +130,7 @@ export const POST: APIRoute = async ({ request }) => {
                 locality: city,
                 administrative_district_level_1: state,
                 postal_code: postalCode,
-                country: "US",
+                country,
               },
             },
           },

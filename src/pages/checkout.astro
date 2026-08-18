@@ -45,10 +45,11 @@ const squareSdkUrl = production ? "https://web.squarecdn.com/v1/square.js" : "ht
               <label>Full name<input name="name" autocomplete="name" required /></label>
               <label>Street address<input name="addressLine1" autocomplete="address-line1" required /></label>
               <label>Apartment, suite, etc. <span>(optional)</span><input name="addressLine2" autocomplete="address-line2" /></label>
-              <label>County<input name="county" placeholder="Philadelphia" required /></label>
+              <label>Country code<input name="country" autocomplete="country" maxlength="2" value="US" placeholder="US" required /></label>
+              <label>County <span>(required for Pennsylvania)</span><input name="county" placeholder="Philadelphia" /></label>
               <div class="address-row">
                 <label>City<input name="city" autocomplete="address-level2" required /></label>
-                <label>State<input name="state" autocomplete="address-level1" maxlength="2" placeholder="PA" required /></label>
+                <label>State / province<input name="state" autocomplete="address-level1" maxlength="80" placeholder="PA" required /></label>
                 <label>ZIP<input name="postalCode" autocomplete="postal-code" required /></label>
               </div>
             </div>
@@ -69,6 +70,11 @@ const squareSdkUrl = production ? "https://web.squarecdn.com/v1/square.js" : "ht
                 <input type="radio" name="shippingMethod" value="tracked" />
                 <span><strong>USPS tracked shipping</strong><small>Tracking included · required for orders $25+</small></span>
                 <b>$4.95</b>
+              </label>
+              <label class="shipping-option">
+                <input type="radio" name="shippingMethod" value="international" disabled />
+                <span><strong>International shipping</strong><small>Automatically selected for non-US country codes</small></span>
+                <b>$7.49</b>
               </label>
             </div>
           </div>
@@ -101,7 +107,7 @@ const squareSdkUrl = production ? "https://web.squarecdn.com/v1/square.js" : "ht
           <div><span>Subtotal</span><strong id="checkout-subtotal">$0.00</strong></div>
           <div><span>Shipping</span><strong id="checkout-shipping">$1.95</strong></div>
           <div><span>Sales tax</span><strong id="checkout-tax">$0.00</strong></div>
-          <div class="checkout-total"><span>Test total</span><strong id="checkout-total">$0.00</strong></div>
+          <div class="checkout-total"><span>{production ? "Total" : "Test total"}</span><strong id="checkout-total">$0.00</strong></div>
         </div>
       </aside>
     </div>
