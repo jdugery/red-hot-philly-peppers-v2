@@ -9,7 +9,6 @@ description: "Extremely popular mild Japanese pepper. Best enjoyed blistered
 image: /images/IMG_4878.jpeg
 gallery:
   - image: /images/IMG_4426-1.jpeg
-    caption: poopy test
   - image: /images/IMG_5180.jpeg
     caption: The ripening stage
 available: false
