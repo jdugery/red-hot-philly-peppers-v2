@@ -15,11 +15,21 @@ const speciesOptions = [
   ...new Set(sortedPeppers.map((pepper) => pepper.data.species).filter(Boolean)),
 ].sort();
 
-function getMaxShu(heat: string | undefined) {
-  if (!heat) return 0;
+function getShuValues(heat: string | undefined) {
+  if (!heat) return [];
   const numbers = heat.match(/[\d,]+/g);
-  if (!numbers?.length) return 0;
-  return Math.max(...numbers.map((number) => Number(number.replaceAll(",", ""))));
+  return numbers?.map((number) => Number(number.replaceAll(",", ""))) ?? [];
+}
+
+function getMaxShu(heat: string | undefined) {
+  const values = getShuValues(heat);
+  return values.length ? Math.max(...values) : 0;
+}
+
+function getMidpointShu(heat: string | undefined) {
+  const values = getShuValues(heat);
+  if (!values.length) return 0;
+  return (Math.min(...values) + Math.max(...values)) / 2;
 }
 
 function getHeatBand(heat: string | undefined) {
@@ -31,24 +41,36 @@ function getHeatBand(heat: string | undefined) {
 }
 
 /*
-Converts heat text such as "25,000–50,000 SHU" into a visual percentage.
-
-The stepped, logarithmic scale keeps mild peppers readable without making
-medium-hot varieties feel hotter than they are.
+Use the midpoint of the listed SHU range and an experience-oriented curve.
+Near-sweet peppers stay near zero, everyday hot peppers remain readable,
+habaneros rise sharply, and superhots occupy the extreme end of the scale.
 */
 function getHeatPercentage(heat: string | undefined) {
-  const shu = getMaxShu(heat);
+  const shu = getMidpointShu(heat);
 
-  if (shu <= 500) return 4;
-  if (shu <= 2500) return 9;
-  if (shu <= 5000) return 16;
-  if (shu <= 15000) return 25;
-  if (shu <= 30000) return 32;
-  if (shu <= 50000) return 38;
-  if (shu <= 100000) return 48;
-  if (shu <= 250000) return 61;
-  if (shu <= 500000) return 73;
-  if (shu <= 1000000) return 86;
+  const anchors = [
+    { shu: 0, percentage: 0 },
+    { shu: 200, percentage: 1 },
+    { shu: 2000, percentage: 12 },
+    { shu: 15000, percentage: 25 },
+    { shu: 40000, percentage: 39 },
+    { shu: 50000, percentage: 44 },
+    { shu: 200000, percentage: 69 },
+    { shu: 250000, percentage: 73 },
+    { shu: 350000, percentage: 80 },
+    { shu: 1000000, percentage: 94 },
+    { shu: 2000000, percentage: 100 },
+  ];
+
+  for (let index = 1; index < anchors.length; index += 1) {
+    const lower = anchors[index - 1];
+    const upper = anchors[index];
+
+    if (shu <= upper.shu) {
+      const progress = (shu - lower.shu) / (upper.shu - lower.shu);
+      return lower.percentage + progress * (upper.percentage - lower.percentage);
+    }
+  }
 
   return 100;
 }
