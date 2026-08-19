@@ -1,7 +1,7 @@
 ---
 name: RHPP Count Dracula
 species: Capsicum annuum
-heat: 5,000-25,000
+heat: 5,000–25,000 SHU
 color: Black, purple, red
 description: "RHPP line of the Count Dracula pepper, a mild to medium hot annuum
   with deep purple pods that ripen to deep red. Unlike most annuums, this pepper
