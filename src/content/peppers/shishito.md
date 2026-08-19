@@ -9,10 +9,12 @@ description: "Extremely popular mild Japanese pepper. Best enjoyed blistered
 image: /images/IMG_4878.jpeg
 gallery:
   - image: /images/IMG_4426-1.jpeg
+  - image: /images/IMG_5180.jpeg
+    caption: The ripening stage
 available: false
 showOnWebsite: true
 seedPrice: 5
-seedQuantity: 15+
+seedQuantity: 10+
 isolatedAvailable: false
 isolatedPrice: 3
 ---
