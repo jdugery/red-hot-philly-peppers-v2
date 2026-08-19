@@ -95,6 +95,15 @@ function getHeatPercentage(heat: string | undefined) {
               </select>
             </div>
 
+            <button
+              id="availability-filter"
+              class="filter-chip"
+              type="button"
+              aria-pressed="false"
+            >
+              <span class="filter-chip-dot" aria-hidden="true"></span>
+              Available now
+            </button>
             <button id="reset-filters" type="button">Reset filters</button>
             <p id="filter-count" aria-live="polite">
               Showing {sortedPeppers.length} {sortedPeppers.length === 1 ? "variety" : "varieties"}
@@ -110,6 +119,7 @@ function getHeatPercentage(heat: string | undefined) {
                 class="variety-card"
                 data-heat-band={getHeatBand(pepper.data.heat)}
                 data-species={pepper.data.species}
+                data-available={String(pepper.data.available)}
               >
                 <a
                   class="image-link"
@@ -191,6 +201,7 @@ function getHeatPercentage(heat: string | undefined) {
 <script>
   const heatFilter = document.querySelector<HTMLSelectElement>("#heat-filter");
   const speciesFilter = document.querySelector<HTMLSelectElement>("#species-filter");
+  const availabilityFilter = document.querySelector<HTMLButtonElement>("#availability-filter");
   const resetButton = document.querySelector<HTMLButtonElement>("#reset-filters");
   const countLabel = document.querySelector<HTMLElement>("#filter-count");
   const noResults = document.querySelector<HTMLElement>("#no-filter-results");
@@ -199,12 +210,14 @@ function getHeatPercentage(heat: string | undefined) {
   function applyFilters() {
     const selectedHeat = heatFilter?.value ?? "all";
     const selectedSpecies = speciesFilter?.value ?? "all";
+    const availableOnly = availabilityFilter?.getAttribute("aria-pressed") === "true";
     let visibleCount = 0;
 
     varietyCards.forEach((card) => {
       const matchesHeat = selectedHeat === "all" || card.dataset.heatBand === selectedHeat;
       const matchesSpecies = selectedSpecies === "all" || card.dataset.species === selectedSpecies;
-      const isVisible = matchesHeat && matchesSpecies;
+      const matchesAvailability = !availableOnly || card.dataset.available === "true";
+      const isVisible = matchesHeat && matchesSpecies && matchesAvailability;
       card.hidden = !isVisible;
       if (isVisible) visibleCount += 1;
     });
@@ -217,9 +230,15 @@ function getHeatPercentage(heat: string | undefined) {
 
   heatFilter?.addEventListener("change", applyFilters);
   speciesFilter?.addEventListener("change", applyFilters);
+  availabilityFilter?.addEventListener("click", () => {
+    const isPressed = availabilityFilter.getAttribute("aria-pressed") === "true";
+    availabilityFilter.setAttribute("aria-pressed", String(!isPressed));
+    applyFilters();
+  });
   resetButton?.addEventListener("click", () => {
     if (heatFilter) heatFilter.value = "all";
     if (speciesFilter) speciesFilter.value = "all";
+    availabilityFilter?.setAttribute("aria-pressed", "false");
     applyFilters();
   });
 </script>
@@ -293,6 +312,7 @@ function getHeatPercentage(heat: string | undefined) {
   }
 
   .filter-field select,
+  .filter-chip,
   #reset-filters {
     min-height: 44px;
     padding: 0 14px;
@@ -302,6 +322,41 @@ function getHeatPercentage(heat: string | undefined) {
     color: var(--black);
     font: inherit;
     font-size: 14px;
+  }
+
+  .filter-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 800;
+    white-space: nowrap;
+    transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+  }
+
+  .filter-chip-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #56a56f;
+    box-shadow: 0 0 0 3px rgba(86, 165, 111, 0.14);
+  }
+
+  .filter-chip[aria-pressed="true"] {
+    border-color: #397d4e;
+    background: #397d4e;
+    color: var(--white);
+  }
+
+  .filter-chip[aria-pressed="true"] .filter-chip-dot {
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+  }
+
+  .filter-chip:focus-visible {
+    outline: 3px solid rgba(57, 125, 78, 0.3);
+    outline-offset: 2px;
   }
 
   #reset-filters {
