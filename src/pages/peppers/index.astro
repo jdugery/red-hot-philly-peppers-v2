@@ -31,24 +31,24 @@ function getHeatBand(heat: string | undefined) {
 }
 
 /*
-Converts heat text such as "25,000–50,000 SHU" into a percentage.
+Converts heat text such as "25,000–50,000 SHU" into a visual percentage.
 
-The scale is logarithmic because pepper heat ranges from nearly zero
-to more than 2,000,000 SHU.
+The stepped, logarithmic scale keeps mild peppers readable without making
+medium-hot varieties feel hotter than they are.
 */
 function getHeatPercentage(heat: string | undefined) {
   const shu = getMaxShu(heat);
 
-  if (shu <= 500) return 5;
-  if (shu <= 2500) return 10;
-  if (shu <= 5000) return 18;
-  if (shu <= 15000) return 28;
-  if (shu <= 30000) return 35;
-  if (shu <= 50000) return 42;
-  if (shu <= 100000) return 52;
-  if (shu <= 250000) return 65;
-  if (shu <= 500000) return 78;
-  if (shu <= 1000000) return 90;
+  if (shu <= 500) return 4;
+  if (shu <= 2500) return 9;
+  if (shu <= 5000) return 16;
+  if (shu <= 15000) return 25;
+  if (shu <= 30000) return 32;
+  if (shu <= 50000) return 38;
+  if (shu <= 100000) return 48;
+  if (shu <= 250000) return 61;
+  if (shu <= 500000) return 73;
+  if (shu <= 1000000) return 86;
 
   return 100;
 }
@@ -64,6 +64,10 @@ function getHeatPercentage(heat: string | undefined) {
       </p>
 
       <h1>Pepper Varieties</h1>
+      <p class="catalog-description">
+        Explore our current seed collection, from nearly sweet to seriously hot.
+        SHU ranges are estimates; growing conditions and individual pods can vary.
+      </p>
     </header>
 
     {

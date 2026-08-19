@@ -1,7 +1,7 @@
 ---
 name: Orange Habanero
 species: Capsicum chinense
-heat: 100,000 - 350,000
+heat: 100,000–350,000 SHU
 color: Orange
 description: The OG hot pepper. An extremely productive plant producing dozens
   of medium sized, translucent orange pods. Perfect for chili flakes, powder, or
