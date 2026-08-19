@@ -15,7 +15,8 @@ gallery:
     caption: Count Dracula flower opening
   - image: /images/IMG_4695.jpeg
     caption: An immature pod
-available: true
+available: false
+showOnWebsite: true
 seedPrice: 8
 seedQuantity: 10+
 isolatedAvailable: false
