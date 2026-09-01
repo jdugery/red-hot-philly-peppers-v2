@@ -10,7 +10,8 @@ image: /images/IMG_4879-1.jpeg
 gallery:
   - image: /images/IMG_5180.jpeg
     caption: The ripening stage
-available: false
+available: true
+showOnWebsite: true
 seedPrice: 5
 seedQuantity: 10+
 isolatedAvailable: false
