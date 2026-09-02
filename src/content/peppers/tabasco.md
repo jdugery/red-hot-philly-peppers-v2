@@ -7,8 +7,9 @@ description: Small, upward facing peppers that grow in clusters on compact,
   bushy plants. Famous for their use in Tabasco sauce, these little peppers pack
   a nice punch. Excellent for making homemade hot sauce or spicing up your
   favorite dishes.
+image: /images/IMG_0938.jpeg
 gallery:
-  - {}
+  - image: /images/IMG_0363.jpeg
 available: false
 showOnWebsite: true
 seedPrice: 5
