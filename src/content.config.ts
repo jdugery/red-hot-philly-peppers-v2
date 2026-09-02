@@ -19,9 +19,14 @@ const peppers = defineCollection({
     gallery: z
       .array(
         z.object({
-          image: z.string(),
+          image: z.string().optional(),
           caption: z.string().optional(),
         }),
+      )
+      .transform((items) =>
+        items
+          .filter((item) => Boolean(item.image))
+          .map((item) => ({ image: item.image!, caption: item.caption })),
       )
       .default([]),
 

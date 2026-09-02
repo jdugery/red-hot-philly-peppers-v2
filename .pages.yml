@@ -54,6 +54,7 @@ content:
           - name: image
             label: Image
             type: image
+            required: true
 
           - name: caption
             label: Caption

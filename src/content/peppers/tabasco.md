@@ -8,8 +8,7 @@ description: Small, upward facing peppers that grow in clusters on compact,
   a nice punch. Excellent for making homemade hot sauce or spicing up your
   favorite dishes.
 image: /images/IMG_0938.jpeg
-gallery:
-  - {}
+gallery: []
 available: false
 showOnWebsite: true
 seedPrice: 5
