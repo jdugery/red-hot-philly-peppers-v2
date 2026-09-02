@@ -9,7 +9,7 @@ description: Small, upward facing peppers that grow in clusters on compact,
   favorite dishes.
 image: /images/IMG_0938.jpeg
 gallery:
-  - image: /images/IMG_0363.jpeg
+  - {}
 available: false
 showOnWebsite: true
 seedPrice: 5
