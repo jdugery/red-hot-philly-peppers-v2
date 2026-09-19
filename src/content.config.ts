@@ -65,6 +65,14 @@ const home = defineCollection({
   }),
 });
 
+const info = defineCollection({
+  loader: glob({
+    pattern: "**/*.{md,mdx}",
+    base: "./src/content/info",
+  }),
+  schema: z.object({}),
+});
+
 const tomatoes = defineCollection({
   loader: glob({
     pattern: "**/*.{md,mdx}",
@@ -140,4 +148,5 @@ export const collections = {
   tomatoes,
   tobacco,
   home,
+  info,
 };

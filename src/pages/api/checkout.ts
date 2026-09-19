@@ -12,7 +12,7 @@ const INTERNATIONAL_SHIPPING_CENTS = 749;
 const TRACKING_REQUIRED_AT_CENTS = 2500;
 const FREE_DOMESTIC_SHIPPING_AT_CENTS = 3000;
 const SQUARE_VERSION = "2026-07-15";
-const COLLECTIONS = ["peppers", "tomatoes", "tobacco"] as const;
+const COLLECTIONS = ["peppers", "tobacco"] as const;
 
 type CollectionName = (typeof COLLECTIONS)[number];
 type CartInput = { productId: string; collection: CollectionName; isolated: boolean; quantity: number };

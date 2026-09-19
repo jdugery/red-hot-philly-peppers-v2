@@ -6,7 +6,7 @@ color: Red
 description: Marble sized sweet tomatoes produced in large clusters. Perfect for
   snacking on, adding to salads, etc.
 image: /images/redcurrantmain.jpeg
-available: true
+available: false
 seedPrice: 3
 seedQuantity: 25+
 isolatedAvailable: true

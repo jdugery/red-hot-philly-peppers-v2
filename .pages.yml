@@ -3,6 +3,16 @@ media:
   output: /images
 
 content:
+  - name: info
+    label: FAQ & Info
+    type: file
+    path: src/content/info/info.md
+    format: yaml-frontmatter
+    fields:
+      - name: body
+        label: General Information
+        type: rich-text
+
   - name: peppers
     label: Pepper Varieties
     type: collection

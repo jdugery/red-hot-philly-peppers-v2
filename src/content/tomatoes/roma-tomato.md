@@ -4,7 +4,7 @@ species: Solanum lycopersicum
 type: Roma
 color: Red
 description: Plum shaped tomato widely used for canning, paste, and sauces.
-available: true
+available: false
 showOnWebsite: false
 seedPrice: 5
 seedQuantity: 10+
