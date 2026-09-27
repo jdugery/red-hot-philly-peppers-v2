@@ -4,7 +4,7 @@ species: Capsicum baccatum
 heat: 25,000–50,000 SHU
 color: Orange / Red
 description: A peach colored baccatum with red stripes, and a twisty pod shape.
-image: /images/IMG_4781.jpeg
+image: /images/IMG_5844.jpeg
 gallery:
   - image: /images/IMG_4278-2-2.jpeg
     caption: SRSP pre ripening stage
@@ -14,6 +14,7 @@ gallery:
     caption: Great view of an unripe fruit
   - image: /images/IMG_1107-2.jpeg
 available: true
+showOnWebsite: true
 seedPrice: 5
 seedQuantity: 15+
 isolatedAvailable: true
