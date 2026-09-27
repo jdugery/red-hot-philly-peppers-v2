@@ -7,7 +7,7 @@ description: "RHPP line of the Count Dracula pepper, a mild to medium hot annuum
   with deep purple pods that ripen to deep red. Unlike most annuums, this pepper
   has strong anthocyanin production, resulting in a deep purple foliage with
   hints of green. "
-image: /images/IMG_1093.jpeg
+image: /images/IMG_5741.jpeg
 gallery:
   - image: /images/IMG_4666.jpeg
     caption: Count Dracula foliage
@@ -15,9 +15,10 @@ gallery:
     caption: Count Dracula flower opening
   - image: /images/IMG_4695.jpeg
     caption: An immature pod
-available: false
+  - image: /images/IMG_5746.jpeg
+available: true
 showOnWebsite: true
-seedPrice: 8
+seedPrice: 7
 seedQuantity: 10+
 isolatedAvailable: false
 ---
