@@ -1,11 +1,11 @@
 ---
-name: Chocolate Jamaican Hockey Puck
+name: Chocolate Scotch Bonnet (UFO)
 species: Capsicum chinense
 heat: 100,000 - 300,000
 color: Chocolate
 description: >+
-  A flat, circular chocolate colored chinense resembling a hockey puck. Strong
-  heat, very closely related to the Chocolate Scotch Bonnet.
+  A flatter, UFO shaped variety of the chocolate scotch bonnet. Strong heat &
+  classic chinense flavor with a striking color.
 
 
   Parent seeds generously gifted by blackmesabeanfarm.com
