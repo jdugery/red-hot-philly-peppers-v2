@@ -10,8 +10,6 @@ gallery:
     caption: SRSP pre ripening stage
   - image: /images/IMG_4664-1.jpeg
     caption: SRSP starting to ripen
-  - image: /images/IMG_4142-1.jpeg
-    caption: Great view of an unripe fruit
   - image: /images/IMG_1107-2.jpeg
 available: true
 showOnWebsite: true
