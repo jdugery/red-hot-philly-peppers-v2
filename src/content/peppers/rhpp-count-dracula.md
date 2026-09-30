@@ -4,9 +4,9 @@ species: Capsicum annuum
 heat: 5,000–25,000 SHU
 color: Black, purple, red
 description: "RHPP line of the Count Dracula pepper, a mild to medium hot annuum
-  with deep purple pods that ripen to deep red. Unlike most annuums, this pepper
-  has strong anthocyanin production, resulting in a deep purple foliage with
-  hints of green. "
+  with deep purple pods that ripen to bright red. Unlike most annuums, this
+  pepper has strong anthocyanin production, resulting in a deep purple foliage
+  with hints of green. "
 image: /images/IMG_5741.jpeg
 gallery:
   - image: /images/IMG_4666.jpeg
