@@ -1,11 +1,11 @@
 ---
 name: RHPP 16.1
 species: Unknown
-heat: 10,000 - 50,000
+heat: 20,000 - 50,000
 color: Black Purple to Red
 description: >-
-  A RHPP exclusive. Large, twisty, red cayenne like variety. Exhibits slight to
-  moderate corking, strong Anthocyanin production.
+  A RHPP exclusive with moderate heat. Large, twisty, red cayenne like variety.
+  Exhibits slight to moderate corking, strong Anthocyanin production.
 
 
   **UNSTABLE LINE**
