@@ -5,7 +5,7 @@ heat: 20,000 - 50,000
 color: Black Purple to Red
 description: >-
   A RHPP exclusive with moderate heat. Large, twisty, red cayenne like variety.
-  Exhibits slight to moderate corking, strong Anthocyanin production.
+  Exhibits slight to moderate corking & strong anthocyanin production.
 
 
   **UNSTABLE LINE**
