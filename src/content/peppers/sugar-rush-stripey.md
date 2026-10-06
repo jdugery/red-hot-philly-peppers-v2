@@ -15,6 +15,6 @@ available: true
 showOnWebsite: true
 seedPrice: 5
 seedQuantity: 15+
-isolatedAvailable: true
+isolatedAvailable: false
 isolatedPrice: 3
 ---
