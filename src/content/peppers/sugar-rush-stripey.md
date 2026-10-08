@@ -11,6 +11,7 @@ gallery:
   - image: /images/IMG_4664-1.jpeg
     caption: SRSP starting to ripen
   - image: /images/IMG_1107-2.jpeg
+  - image: /images/srs.jpeg
 available: true
 showOnWebsite: true
 seedPrice: 5
