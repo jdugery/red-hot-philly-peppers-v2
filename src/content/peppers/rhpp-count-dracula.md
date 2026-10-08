@@ -16,6 +16,7 @@ gallery:
   - image: /images/IMG_4695.jpeg
     caption: An immature pod
   - image: /images/IMG_5746.jpeg
+  - {}
 available: true
 showOnWebsite: true
 seedPrice: 7
