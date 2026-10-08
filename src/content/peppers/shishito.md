@@ -10,9 +10,10 @@ image: /images/IMG_4879-1.jpeg
 gallery:
   - image: /images/IMG_5180.jpeg
     caption: The ripening stage
-  - {}
-  - {}
-  - {}
+  - image: /images/shis2.jpeg
+    caption: A mix of unripe and ripe pods
+  - image: /images/shis.jpeg
+  - image: /images/shis1.jpeg
 available: true
 showOnWebsite: true
 seedPrice: 5
