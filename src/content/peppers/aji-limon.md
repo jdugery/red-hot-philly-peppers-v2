@@ -8,8 +8,10 @@ description: A world renowned classic baccatum originating from Peru. Also
   for salsa, powder, or hot sauce.
 image: /images/IMG_5856.jpeg
 gallery:
-  - image: /images/IMG_5857.jpeg
+  - image: /images/lim1.jpeg
   - image: /images/IMG_5854.jpeg
+  - image: /images/lim2.jpeg
+  - image: /images/lim3.jpeg
 available: true
 showOnWebsite: true
 seedPrice: 5
