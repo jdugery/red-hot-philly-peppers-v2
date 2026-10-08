@@ -11,8 +11,9 @@ description: A vigorous and highly productive superhot that ripens to a deep
 image: /images/IMG_5853.jpeg
 gallery:
   - image: /images/IMG_5848.jpeg
-  - image: /images/IMG_5852.jpeg
+  - image: /images/nebru-2.jpeg
   - image: /images/IMG_5850.jpeg
+  - {}
 available: true
 showOnWebsite: true
 seedPrice: 5
