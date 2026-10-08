@@ -1,7 +1,7 @@
 ---
 name: 7 Pot Nebru
 species: Capsicum chinense
-heat: 800,000
+heat: 800,000+
 color: Yellow
 description: A vigorous and highly productive superhot that ripens to a deep
   yellow. Originally created by crossing a 7 Pot Jonah with a Yellow Scotch
