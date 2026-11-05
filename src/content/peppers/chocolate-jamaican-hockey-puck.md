@@ -2,7 +2,7 @@
 name: Chocolate Scotch Bonnet (Flat)
 species: Capsicum chinense
 heat: 100,000 - 300,000
-color: Chocolate
+color: Chocolate brown
 description: >+
   A flatter, UFO shaped variety of the chocolate scotch bonnet. Strong heat &
   classic chinense flavor with a striking color.
