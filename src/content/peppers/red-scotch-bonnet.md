@@ -17,7 +17,7 @@ image: /images/sb0.jpeg
 gallery:
   - image: /images/sb1.jpeg
   - image: /images/sb2.jpeg
-available: true
+available: false
 showOnWebsite: true
 seedPrice: 5
 seedQuantity: 10+
