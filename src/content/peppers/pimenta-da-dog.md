@@ -12,8 +12,10 @@ image: /images/pdd1.jpeg
 gallery:
   - image: /images/pdd3.jpeg
   - image: /images/pdd.jpeg
-  - image: /images/pdd4.jpeg
-    caption: A pair of immature pods
+  - image: /images/pimenta2.jpeg
+    caption: Jet black unripe pods
+  - image: /images/p2.jpeg
+    caption: Another pair of unripe pods
 available: true
 showOnWebsite: true
 seedPrice: 6
