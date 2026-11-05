@@ -1,5 +1,5 @@
 ---
-name: Chocolate Scotch Bonnet (UFO)
+name: Chocolate Scotch Bonnet (Flat)
 species: Capsicum chinense
 heat: 100,000 - 300,000
 color: Chocolate
