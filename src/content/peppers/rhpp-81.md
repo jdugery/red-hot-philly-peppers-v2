@@ -5,7 +5,7 @@ heat: 50,000+
 color: Bright orange
 description: A medium sized, hot orange pepper with origins unknown. Potentially
   a hot descendant of Pippin's Golden Honey. Abundant pod production with a
-  floral smell and taste, and few seeds.
+  floral smell and taste, and few seeds. **UNSTABLE LINE**
 image: /images/1_8.1.jpeg
 gallery:
   - image: /images/2_8.1.jpeg
