@@ -10,8 +10,8 @@ description: A wrinkly, peach colored superhot bred by PA's own Jay Weaver.
 image: /images/JPGS1.jpeg
 gallery:
   - image: /images/jpgs2.jpeg
-  - {}
-  - {}
+  - image: /images/jpgs1.jpeg
+  - image: /images/IMG_6206.jpeg
 available: true
 showOnWebsite: true
 seedPrice: 5
